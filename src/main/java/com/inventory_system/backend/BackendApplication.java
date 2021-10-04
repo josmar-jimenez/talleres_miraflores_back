@@ -33,7 +33,7 @@ public class BackendApplication extends SpringBootServletInitializer {
 			http.csrf().disable()
 					.addFilterAfter(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class)
 					.authorizeRequests()
-					.antMatchers(HttpMethod.POST, "/login").permitAll()
+					.antMatchers(HttpMethod.POST, "/user/login").permitAll()
 					.anyRequest().authenticated();
 		}
 	}

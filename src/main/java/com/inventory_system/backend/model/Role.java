@@ -12,10 +12,12 @@ import javax.persistence.Id;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class Status {
+public class Role {
     @Id
     @Column
     private Integer id;
     @Column
     private String name;
+    @Column
+    private String description;
 }

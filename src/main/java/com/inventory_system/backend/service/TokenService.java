@@ -17,6 +17,9 @@ public class TokenService {
     @Value("${jwt.secretKey}")
     private  String SECRET;
 
+    @Value("${jwt.tokenTimeout}")
+    private  String TOKEN_TIMEOUT;
+
     public String getJWTToken(String username) {
         List<GrantedAuthority> grantedAuthorities = AuthorityUtils
                 .commaSeparatedStringToAuthorityList("ROLE_USER");
@@ -25,7 +28,7 @@ public class TokenService {
                         .map(GrantedAuthority::getAuthority)
                         .collect(Collectors.toList()))
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 600000))
+                .setExpiration(new Date(System.currentTimeMillis() + Integer.valueOf(TOKEN_TIMEOUT)*1000))
                 .signWith(SignatureAlgorithm.HS512,	SECRET.getBytes()).compact();
         return "Bearer " + token;
     }
