@@ -25,7 +25,7 @@ public class CustomExceptionHandler {
     public final ResponseEntity<StandardResponse> handleBusiness(
             BusinessException ex) {
         return new ResponseEntity<>(
-                new StandardResponse(null,tokenService.getJWTToken("anonimo"),ex.getErrorCode(),ex.getMessage()),
+                new StandardResponse(null,tokenService.getJWTToken(tokenService.getUserNick()),ex.getErrorCode(),ex.getMessage()),
                 new HttpHeaders(), HttpStatus.OK);
     }
 }

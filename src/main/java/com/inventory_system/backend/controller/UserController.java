@@ -10,6 +10,8 @@ import com.inventory_system.backend.service.TokenService;
 import com.inventory_system.backend.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -48,9 +50,28 @@ public class UserController {
 
 	@PostMapping
 	public StandardResponse createUser(@RequestBody @Valid UserRequestDTO userRequestDTO) throws Exception {
+		tokenService.checkRoleCreateAndUpdate();
 		User user = userService.create(userRequestDTO);
 		String token = tokenService.getJWTToken(user.getNick());
 		UserResponseDTO userResponseDTO = modelMapper.map(user, UserResponseDTO.class);
 		return StandardResponse.createResponse(userResponseDTO, token);
+	}
+
+	@PutMapping("/{id}")
+	public StandardResponse updateUser(@RequestBody @Valid UserRequestDTO userRequestDTO,
+									   @PathVariable(value = "id")Integer id) throws Exception {
+		User user = userService.update(userRequestDTO, id);
+		String token = tokenService.getJWTToken(user.getNick());
+		UserResponseDTO userResponseDTO = modelMapper.map(user, UserResponseDTO.class);
+		return StandardResponse.createResponse(userResponseDTO, token);
+	}
+
+	@GetMapping
+	public StandardResponse getUsers(Pageable pageable) throws Exception {
+		tokenService.checkRoleCreateAndUpdate();
+		Page<UserResponseDTO> page = userService.findAll(pageable).map(user ->
+				modelMapper.map(user, UserResponseDTO.class));
+		return StandardResponse.createResponse(page,
+				tokenService.getJWTToken(tokenService.getUserNick()));
 	}
 }
