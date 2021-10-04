@@ -18,4 +18,5 @@ public class DataSourceConfig {
 	public DataSourceProperties dataSourceProperties() {
 		return new DataSourceProperties();
 	}
+
 }
