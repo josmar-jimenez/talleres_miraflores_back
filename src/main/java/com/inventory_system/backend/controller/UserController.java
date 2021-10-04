@@ -1,5 +1,6 @@
 package com.inventory_system.backend.controller;
 
+import com.inventory_system.backend.dto.request.user.UserRequestDTO;
 import com.inventory_system.backend.dto.response.LoginResponseDTO;
 import com.inventory_system.backend.dto.response.StandardResponse;
 import com.inventory_system.backend.dto.response.user.UserResponseDTO;
@@ -10,6 +11,8 @@ import com.inventory_system.backend.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/user")
@@ -36,8 +39,16 @@ public class UserController {
 	}
 
 	@GetMapping("/{id}")
-	public StandardResponse getUser(@PathVariable(value = "id", required = true)Integer id) throws Exception {
+	public StandardResponse getUser(@PathVariable(value = "id")Integer id) throws Exception {
 		User user = userService.findById(id);
+		String token = tokenService.getJWTToken(user.getNick());
+		UserResponseDTO userResponseDTO = modelMapper.map(user, UserResponseDTO.class);
+		return StandardResponse.createResponse(userResponseDTO, token);
+	}
+
+	@PostMapping
+	public StandardResponse createUser(@RequestBody @Valid UserRequestDTO userRequestDTO) throws Exception {
+		User user = userService.create(userRequestDTO);
 		String token = tokenService.getJWTToken(user.getNick());
 		UserResponseDTO userResponseDTO = modelMapper.map(user, UserResponseDTO.class);
 		return StandardResponse.createResponse(userResponseDTO, token);

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class StatusService {
@@ -15,5 +16,9 @@ public class StatusService {
 
     public List<Status> getStatus(){
         return statusRepository.findAll();
+    }
+
+    public Optional<Status> findById(int id){
+        return statusRepository.findById(id);
     }
 }
