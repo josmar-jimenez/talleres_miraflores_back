@@ -44,7 +44,7 @@ public class StoreService {
     public Store create(StoreRequestDTO storeRequestDTO, Allowed allowed) throws BusinessException {
         Store store = storeRepository.findByName(storeRequestDTO.getName()).orElse(null);
 
-        if( Objects.isNull(store) || !Allowed.USER.equals(allowed)){
+        if( Objects.isNull(store)){
             store = modelMapper.map(storeRequestDTO, Store.class);
             store.setStatus(statusService.findById(storeRequestDTO.getStatus_id()).orElseThrow(()
                     -> new BusinessException(RECORD_NOT_FOUND_CODE,RECORD_NOT_FOUND)));

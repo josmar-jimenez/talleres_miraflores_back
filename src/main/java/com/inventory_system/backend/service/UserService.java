@@ -112,6 +112,8 @@ public class UserService {
                 }
             }
         }
+        /*Unique field don't map*/
+        userRequestDTO.setNick(user.getNick());
         modelMapper.map(userRequestDTO, user);
         user =userRepository.save(user);
         return user;
