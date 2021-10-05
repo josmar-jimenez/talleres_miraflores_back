@@ -4,8 +4,11 @@ import com.inventory_system.backend.dto.request.user.UserRequestDTO;
 import com.inventory_system.backend.dto.response.LoginResponseDTO;
 import com.inventory_system.backend.dto.response.StandardResponse;
 import com.inventory_system.backend.dto.response.user.UserResponseDTO;
+import com.inventory_system.backend.enums.Action;
+import com.inventory_system.backend.enums.Allowed;
 import com.inventory_system.backend.exception.UnauthorizedException;
 import com.inventory_system.backend.model.User;
+import com.inventory_system.backend.service.RoleOperativeActionService;
 import com.inventory_system.backend.service.TokenService;
 import com.inventory_system.backend.service.UserService;
 import org.modelmapper.ModelMapper;
@@ -25,7 +28,11 @@ public class UserController {
 	@Autowired
 	UserService userService;
 	@Autowired
+	RoleOperativeActionService roleOperativeActionService;
+	@Autowired
 	ModelMapper modelMapper;
+
+	private final int OPERATIVE = 1;
 
 	@PostMapping("login")
 	public LoginResponseDTO login(@RequestParam("nick") String nick, @RequestParam("password") String password) throws Exception {
@@ -42,34 +49,37 @@ public class UserController {
 
 	@GetMapping("/{id}")
 	public StandardResponse getUser(@PathVariable(value = "id")Integer id) throws Exception {
+		roleOperativeActionService.checkRoleOperativeAndAction(OPERATIVE, Action.QUERY.ordinal());
 		User user = userService.findById(id);
-		String token = tokenService.getJWTToken(user.getNick());
 		UserResponseDTO userResponseDTO = modelMapper.map(user, UserResponseDTO.class);
-		return StandardResponse.createResponse(userResponseDTO, token);
+		return StandardResponse.createResponse(userResponseDTO,
+				tokenService.getJWTToken(tokenService.getUserNick()));
+
 	}
 
 	@PostMapping
 	public StandardResponse createUser(@RequestBody @Valid UserRequestDTO userRequestDTO) throws Exception {
-		tokenService.checkRoleCreateAndUpdate();
-		User user = userService.create(userRequestDTO);
-		String token = tokenService.getJWTToken(user.getNick());
+		Allowed allowed = roleOperativeActionService.checkRoleOperativeAndAction(OPERATIVE, Action.CREATE.ordinal());
+		User user = userService.create(userRequestDTO,allowed);
 		UserResponseDTO userResponseDTO = modelMapper.map(user, UserResponseDTO.class);
-		return StandardResponse.createResponse(userResponseDTO, token);
+		return StandardResponse.createResponse(userResponseDTO,
+				tokenService.getJWTToken(tokenService.getUserNick()));
 	}
 
 	@PutMapping("/{id}")
 	public StandardResponse updateUser(@RequestBody @Valid UserRequestDTO userRequestDTO,
 									   @PathVariable(value = "id")Integer id) throws Exception {
-		User user = userService.update(userRequestDTO, id);
-		String token = tokenService.getJWTToken(user.getNick());
+		Allowed allowed = roleOperativeActionService.checkRoleOperativeAndAction(OPERATIVE, Action.UPDATE.ordinal());
+		User user = userService.update(userRequestDTO, id,allowed);
 		UserResponseDTO userResponseDTO = modelMapper.map(user, UserResponseDTO.class);
-		return StandardResponse.createResponse(userResponseDTO, token);
+		return StandardResponse.createResponse(userResponseDTO,
+				tokenService.getJWTToken(tokenService.getUserNick()));
 	}
 
 	@GetMapping
 	public StandardResponse getUsers(Pageable pageable) throws Exception {
-		tokenService.checkRoleCreateAndUpdate();
-		Page<UserResponseDTO> page = userService.findAll(pageable).map(user ->
+		Allowed allowed = roleOperativeActionService.checkRoleOperativeAndAction(OPERATIVE, Action.QUERY.ordinal());
+		Page<UserResponseDTO> page = userService.findAll(pageable,allowed).map(user ->
 				modelMapper.map(user, UserResponseDTO.class));
 		return StandardResponse.createResponse(page,
 				tokenService.getJWTToken(tokenService.getUserNick()));

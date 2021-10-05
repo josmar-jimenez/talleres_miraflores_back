@@ -55,12 +55,4 @@ public class TokenService {
                 .getBody()
                 .getSubject();
     }
-
-    public void checkRoleCreateAndUpdate() throws UnauthorizedException, BusinessException {
-        String nick = this.getUserNick();
-        User user = userService.findByNick(nick);
-        if(user.getRole().getId()!=1&&user.getRole().getId()!=2){
-            throw new BusinessException(INSUFFICIENT_PRIVILEGES_CODE, INSUFFICIENT_PRIVILEGES);
-        }
-    }
 }
