@@ -24,7 +24,7 @@ public class Store {
     @Column
     private String phone;
     @Column
-    private byte[] image;
+    private String image;
     /*Relations*/
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Status status;

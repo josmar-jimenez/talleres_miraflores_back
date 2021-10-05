@@ -1,8 +1,5 @@
 package com.inventory_system.backend.service;
 
-import com.inventory_system.backend.exception.BusinessException;
-import com.inventory_system.backend.exception.UnauthorizedException;
-import com.inventory_system.backend.model.User;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +13,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.inventory_system.backend.util.InventorySystemConstant.INSUFFICIENT_PRIVILEGES;
-import static com.inventory_system.backend.util.InventorySystemConstant.INSUFFICIENT_PRIVILEGES_CODE;
-
 @Service
 public class TokenService {
 
@@ -27,9 +21,6 @@ public class TokenService {
 
     @Value("${jwt.tokenTimeout}")
     private  String TOKEN_TIMEOUT;
-
-    @Autowired
-    private UserService userService;
 
     @Autowired
     private HttpServletRequest request;

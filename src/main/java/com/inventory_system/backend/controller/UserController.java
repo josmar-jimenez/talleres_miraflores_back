@@ -49,8 +49,8 @@ public class UserController {
 
 	@GetMapping("/{id}")
 	public StandardResponse getUser(@PathVariable(value = "id")Integer id) throws Exception {
-		roleOperativeActionService.checkRoleOperativeAndAction(OPERATIVE, Action.QUERY.ordinal());
-		User user = userService.findById(id);
+		Allowed allowed = roleOperativeActionService.checkRoleOperativeAndAction(OPERATIVE, Action.QUERY.ordinal());
+		User user = userService.findById(id,allowed);
 		UserResponseDTO userResponseDTO = modelMapper.map(user, UserResponseDTO.class);
 		return StandardResponse.createResponse(userResponseDTO,
 				tokenService.getJWTToken(tokenService.getUserNick()));

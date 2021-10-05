@@ -36,12 +36,24 @@ public class UserService {
         return userRepository.findByNick(nick).orElseThrow(UnauthorizedException::new);
     }
 
-    public User findById(Integer id) throws BusinessException {
-        return userRepository.findById(id).orElseThrow(()
+    public User findById(Integer id,Allowed allowed) throws BusinessException, UnauthorizedException {
+
+        User user = userRepository.findById(id).orElseThrow(()
                 -> new BusinessException(RECORD_NOT_FOUND_CODE,RECORD_NOT_FOUND));
+        if(Allowed.ALL.equals(allowed)){
+            return user;
+        } else {
+            User userLogged = findByNick(tokenService.getUserNick());
+            if(Allowed.STORE.equals(allowed)&&!user.getStore().equals(userLogged.getStore())){
+                throw new BusinessException(INSUFFICIENT_PRIVILEGES_CODE, INSUFFICIENT_PRIVILEGES);
+            } else if(Allowed.USER.equals(allowed)&&!user.getId().equals(userLogged.getId())){
+                throw new BusinessException(INSUFFICIENT_PRIVILEGES_CODE, INSUFFICIENT_PRIVILEGES);
+            }
+        }
+        return user;
     }
 
-    public Page<User> findAll(Pageable pageable, Allowed allowed) throws BusinessException, UnauthorizedException {
+    public Page<User> findAll(Pageable pageable, Allowed allowed) throws UnauthorizedException {
         if(Allowed.ALL.equals(allowed)){
             return userRepository.findAll(pageable);
         } else {
@@ -63,8 +75,7 @@ public class UserService {
            user.setStatus(statusService.findById(userRequestDTO.getStatus_id()).orElseThrow(()
                    -> new BusinessException(RECORD_NOT_FOUND_CODE,RECORD_NOT_FOUND)));
            if(Allowed.ALL.equals(allowed)) {
-               user.setStore(storeService.findById(userRequestDTO.getStore_id()).orElseThrow(()
-                       -> new BusinessException(RECORD_NOT_FOUND_CODE, RECORD_NOT_FOUND)));
+               user.setStore(storeService.findById(userRequestDTO.getStore_id()));
            }else{
                User userLogged = findByNick(tokenService.getUserNick());
                user.setStore(userLogged.getStore());
@@ -89,9 +100,9 @@ public class UserService {
             if (Allowed.ALL.equals(allowed)) {
                 user.setStatus(statusService.findById(userRequestDTO.getStatus_id()).orElseThrow(()
                         -> new BusinessException(RECORD_NOT_FOUND_CODE, RECORD_NOT_FOUND)));
-                user.setStore(storeService.findById(userRequestDTO.getStatus_id()).orElseThrow(()
-                        -> new BusinessException(RECORD_NOT_FOUND_CODE, RECORD_NOT_FOUND)));
-                setUserRole(user, userRequestDTO.getRole_id());
+                user.setStore(storeService.findById(userRequestDTO.getStatus_id()));
+                if(!user.getId().equals(userLogged.getId()))
+                    setUserRole(user, userRequestDTO.getRole_id());
             } else {
                 if (Allowed.STORE.equals(allowed)) {
                     user.setStatus(statusService.findById(userRequestDTO.getStatus_id()).orElseThrow(()
