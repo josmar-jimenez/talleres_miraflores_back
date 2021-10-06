@@ -1,7 +1,7 @@
 package com.inventory_system.backend.mapper;
 
-import com.inventory_system.backend.dto.response.user.UserResponseDTO;
-import com.inventory_system.backend.model.User;
+import com.inventory_system.backend.dto.request.provider.ProviderRequestDTO;
+import com.inventory_system.backend.model.Provider;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,23 +10,20 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 
 @Component
-public class UserDTOMapper {
+public class ProviderDTOMapper {
 
     @Autowired
     ModelMapper modelMapper;
 
     @PostConstruct
     public void onCreate(){
-        PropertyMap<User, UserResponseDTO> mapUserToUserResponseDTO = new PropertyMap<User, UserResponseDTO>() {
+        PropertyMap<Provider, ProviderRequestDTO> mapProviderToProviderResponseDTO = new PropertyMap<Provider, ProviderRequestDTO>() {
             @Override
             protected void configure() {
-                map().setStoreId(source.getStore().getId());
-                map().setRoleId(source.getRole().getId());
                 map().setStatusId(source.getStatus().getId());
             }
         };
 
-        modelMapper.getConfiguration().setAmbiguityIgnored(true);
-        modelMapper.addMappings(mapUserToUserResponseDTO);
+        modelMapper.addMappings(mapProviderToProviderResponseDTO);
     }
 }

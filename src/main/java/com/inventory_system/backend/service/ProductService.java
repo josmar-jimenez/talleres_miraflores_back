@@ -20,8 +20,6 @@ public class ProductService {
     @Autowired
     private ProductRepository productRepository;
     @Autowired
-    TokenService tokenService;
-    @Autowired
     private StatusService statusService;
     @Autowired
     private ModelMapper modelMapper;
@@ -40,7 +38,7 @@ public class ProductService {
 
         if( Objects.isNull(product)){
             product = modelMapper.map(productRequestDTO, Product.class);
-            product.setStatus(statusService.findById(productRequestDTO.getStatus_id()).orElseThrow(()
+            product.setStatus(statusService.findById(productRequestDTO.getStatusId()).orElseThrow(()
                     -> new BusinessException(RECORD_NOT_FOUND_CODE,RECORD_NOT_FOUND)));
             product =productRepository.save(product);
         }else{
@@ -52,7 +50,7 @@ public class ProductService {
     public Product update(ProductRequestDTO productRequestDTO, int id) throws BusinessException {
         Product product   = findById(id);
 
-        product.setStatus(statusService.findById(productRequestDTO.getStatus_id()).orElseThrow(()
+        product.setStatus(statusService.findById(productRequestDTO.getStatusId()).orElseThrow(()
                 -> new BusinessException(RECORD_NOT_FOUND_CODE, RECORD_NOT_FOUND)));
         /*Unique field don't map*/
         productRequestDTO.setBarcode(product.getBarcode());

@@ -29,9 +29,9 @@ public class UserDTO {
     private String emergencyContact;
     /*Relations*/
     @NotNull
-    private int store_id;
+    private int storeId;
     @NotNull
-    private int status_id;
+    private int statusId;
     @NotNull
-    private int role_id;
+    private int roleId;
 }

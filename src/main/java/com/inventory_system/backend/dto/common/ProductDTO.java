@@ -31,6 +31,6 @@ public class ProductDTO {
     private String image;
     /*Relations*/
     @NotNull
-    private int status_id;
+    private int statusId;
 
 }

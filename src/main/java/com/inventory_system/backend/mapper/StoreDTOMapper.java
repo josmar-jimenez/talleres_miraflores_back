@@ -20,7 +20,7 @@ public class StoreDTOMapper {
         PropertyMap<Store, StoreResponseDTO> mapStoreToStoreResponseDTO = new PropertyMap<Store, StoreResponseDTO>() {
             @Override
             protected void configure() {
-                map().setStatus_id(source.getStatus().getId());
+                map().setStatusId(source.getStatus().getId());
             }
         };
 

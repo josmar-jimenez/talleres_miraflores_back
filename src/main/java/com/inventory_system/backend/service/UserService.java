@@ -72,15 +72,15 @@ public class UserService {
 
        if( Objects.isNull(user)){
            user = modelMapper.map(userRequestDTO, User.class);
-           user.setStatus(statusService.findById(userRequestDTO.getStatus_id()).orElseThrow(()
+           user.setStatus(statusService.findById(userRequestDTO.getStatusId()).orElseThrow(()
                    -> new BusinessException(RECORD_NOT_FOUND_CODE,RECORD_NOT_FOUND)));
            if(Allowed.ALL.equals(allowed)) {
-               user.setStore(storeService.findById(userRequestDTO.getStore_id()));
+               user.setStore(storeService.findById(userRequestDTO.getStatusId()));
            }else{
                User userLogged = findByNick(tokenService.getUserNick());
                user.setStore(userLogged.getStore());
            }
-           setUserRole(user,userRequestDTO.getRole_id());
+           setUserRole(user,userRequestDTO.getRoleId());
            user =userRepository.save(user);
         }else{
           throw  new BusinessException(RECORD_EXIST_CODE,RECORD_EXIST+"nick");
@@ -98,17 +98,17 @@ public class UserService {
                     -> new BusinessException(RECORD_NOT_FOUND_CODE,RECORD_NOT_FOUND));
 
             if (Allowed.ALL.equals(allowed)) {
-                user.setStatus(statusService.findById(userRequestDTO.getStatus_id()).orElseThrow(()
+                user.setStatus(statusService.findById(userRequestDTO.getStatusId()).orElseThrow(()
                         -> new BusinessException(RECORD_NOT_FOUND_CODE, RECORD_NOT_FOUND)));
-                user.setStore(storeService.findById(userRequestDTO.getStatus_id()));
+                user.setStore(storeService.findById(userRequestDTO.getStoreId()));
                 if(!user.getId().equals(userLogged.getId()))
-                    setUserRole(user, userRequestDTO.getRole_id());
+                    setUserRole(user, userRequestDTO.getRoleId());
             } else {
                 if (Allowed.STORE.equals(allowed)) {
-                    user.setStatus(statusService.findById(userRequestDTO.getStatus_id()).orElseThrow(()
+                    user.setStatus(statusService.findById(userRequestDTO.getStatusId()).orElseThrow(()
                             -> new BusinessException(RECORD_NOT_FOUND_CODE, RECORD_NOT_FOUND)));
                     user.setStore(userLogged.getStore());
-                    setUserRole(user, userRequestDTO.getRole_id());
+                    setUserRole(user, userRequestDTO.getRoleId());
                 }
             }
         }
