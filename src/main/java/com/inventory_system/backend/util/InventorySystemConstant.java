@@ -13,4 +13,10 @@ public class InventorySystemConstant {
 
     public static final String OPERATION_NOT_ALLOWED = "Operación no permitida";
     public static final int OPERATION_NOT_ALLOWED_CODE = 5;
+
+    public static final String INVALID_SALE_REQUEST_NO_PRODUCT = "Debe indicar al menos un producto para realizar una venta";
+    public static final int INVALID_SALE_REQUEST_NO_PRODUCT_CODE = 6;
+
+    public static final String INVALID_SALE_REQUEST_INSUFFICIENT_STOCK = "Insuficiente stock para realizar esta operación";
+    public static final int INVALID_SALE_REQUEST_INSUFFICIENT_STOCK_CODE = 7;
 }

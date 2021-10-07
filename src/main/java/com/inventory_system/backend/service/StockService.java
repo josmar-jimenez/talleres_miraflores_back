@@ -32,6 +32,10 @@ public class StockService {
     @Autowired
     private TokenService tokenService;
 
+    public Stock findByProductIdAndStoreId(int productId, int storeId) {
+        return stockRepository.findByProductIdAndStoreId(productId,storeId).orElse(null);
+    }
+
     public Stock findById(int id, Allowed allowed) throws BusinessException, UnauthorizedException {
         Stock stock= stockRepository.findById(id).orElseThrow(() ->
                 new BusinessException(RECORD_NOT_FOUND_CODE,RECORD_NOT_FOUND));
@@ -67,6 +71,7 @@ public class StockService {
                 stock.setStore(storeService.findById(stockRequestDTO.getStoreId()));
                 stock.setStatus(statusService.findById(stockRequestDTO.getStatusId()));
                 return stockRepository.save(stock);
+                /*TODO: INVOCAR MOVIMIENTO DE INVENTARIO*/
             }else{
                 throw new BusinessException(OPERATION_NOT_ALLOWED_CODE,OPERATION_NOT_ALLOWED);
             }
@@ -83,6 +88,7 @@ public class StockService {
             stock.setStock(stockRequestDTO.getStock());
             stock.setStatus(statusService.findById(stockRequestDTO.getStatusId()));
             stock = stockRepository.save(stock);
+            /*TODO: INVOCAR MOVIMIENTO DE INVENTARIO*/
         }else{
             throw new BusinessException(OPERATION_NOT_ALLOWED_CODE,OPERATION_NOT_ALLOWED);
         }
@@ -92,10 +98,21 @@ public class StockService {
     public boolean delete(int id, Allowed allowed) throws BusinessException, UnauthorizedException {
         Stock stockToDelete = findById(id,allowed);
         stockRepository.delete(stockToDelete);
+        /*TODO: INVOCAR MOVIMIENTO DE INVENTARIO*/
         return true;
     }
 
-    private Stock findByProductIdAndStoreId(int productId, int storeId) {
-        return stockRepository.findByProductIdAndStoreId(productId,storeId).orElse(null);
+    public void updateStock(Integer storeId, Integer productId, Integer cant) throws BusinessException {
+
+        Stock stockExists = findByProductIdAndStoreId(productId,storeId);
+        stockExists.setStock(stockExists.getStock()+cant);
+        /*Status agotado*/
+        if(stockExists.getStock()==0)
+            stockExists.setStatus(statusService.findById(5));
+        else if(stockExists.getStock()<=0)
+            throw new BusinessException(INVALID_SALE_REQUEST_INSUFFICIENT_STOCK_CODE,
+                    INVALID_SALE_REQUEST_INSUFFICIENT_STOCK);
+        stockRepository.save(stockExists);
+        /*TODO: INVOCAR MOVIMIENTO DE INVENTARIO*/
     }
 }
