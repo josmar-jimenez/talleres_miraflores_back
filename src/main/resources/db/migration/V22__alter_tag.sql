@@ -1,0 +1,6 @@
+CREATE SEQUENCE IF NOT EXISTS tag_id_sequence;
+
+ALTER TABLE tag DROP CONSTRAINT IF EXISTS status_id ;
+ALTER TABLE tag DROP COLUMN status;
+
+ALTER TABLE tag ALTER COLUMN id SET DEFAULT nextval('tag_id_sequence');

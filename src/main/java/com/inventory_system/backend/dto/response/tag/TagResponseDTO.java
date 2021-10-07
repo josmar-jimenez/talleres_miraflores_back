@@ -1,7 +1,6 @@
-package com.inventory_system.backend.dto.response.user;
+package com.inventory_system.backend.dto.response.tag;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.inventory_system.backend.dto.common.UserDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,7 +11,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class UserResponseDTO extends UserDTO {
+public class TagResponseDTO {
 
-    private Integer id;
+    private int id;
+    private String name;
 }

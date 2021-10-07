@@ -1,11 +1,10 @@
-package com.inventory_system.backend.dto.common;
+package com.inventory_system.backend.dto.request.tag;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -14,21 +13,10 @@ import javax.validation.constraints.Pattern;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class StoreDTO {
+public class TagRequestDTO {
 
     @NotNull
     @NotEmpty
+    @Pattern(regexp = "^[a-zA-Z0-9_]*$")
     private String name;
-    @NotNull
-    @NotEmpty
-    private String address;
-    @Email
-    private String email;
-    @Pattern(regexp = "^[0-9]*$")
-    private String phone;
-    private String image;
-    /*Relations*/
-    @NotNull
-    private int statusId;
-
 }

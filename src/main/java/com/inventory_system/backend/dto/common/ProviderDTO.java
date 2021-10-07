@@ -5,10 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.*;
 
 @Getter
 @Setter
@@ -21,13 +18,14 @@ public class ProviderDTO {
     private String name;
     @NotNull
     @NotEmpty
-    @NotBlank
+    @Pattern(regexp = "^[a-zA-Z0-9_]*$")
     private String shortName;
     @NotNull
     @NotEmpty
     private String address;
     @Email
     private String email;
+    @Pattern(regexp = "^[0-9]*$")
     private String phone;
     private String image;
     /*Relations*/
