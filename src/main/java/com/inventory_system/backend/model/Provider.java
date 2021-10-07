@@ -28,6 +28,6 @@ public class Provider {
     @Column
     private String image;
     /*Relations*/
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER)
     private Status status;
 }

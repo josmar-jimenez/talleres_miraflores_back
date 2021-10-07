@@ -72,8 +72,7 @@ public class UserService {
 
        if( Objects.isNull(user)){
            user = modelMapper.map(userRequestDTO, User.class);
-           user.setStatus(statusService.findById(userRequestDTO.getStatusId()).orElseThrow(()
-                   -> new BusinessException(RECORD_NOT_FOUND_CODE,RECORD_NOT_FOUND)));
+           user.setStatus(statusService.findById(userRequestDTO.getStatusId()));
            if(Allowed.ALL.equals(allowed)) {
                user.setStore(storeService.findById(userRequestDTO.getStatusId()));
            }else{
@@ -98,15 +97,13 @@ public class UserService {
                     -> new BusinessException(RECORD_NOT_FOUND_CODE,RECORD_NOT_FOUND));
 
             if (Allowed.ALL.equals(allowed)) {
-                user.setStatus(statusService.findById(userRequestDTO.getStatusId()).orElseThrow(()
-                        -> new BusinessException(RECORD_NOT_FOUND_CODE, RECORD_NOT_FOUND)));
+                user.setStatus(statusService.findById(userRequestDTO.getStatusId()));
                 user.setStore(storeService.findById(userRequestDTO.getStoreId()));
                 if(!user.getId().equals(userLogged.getId()))
                     setUserRole(user, userRequestDTO.getRoleId());
             } else {
                 if (Allowed.STORE.equals(allowed)) {
-                    user.setStatus(statusService.findById(userRequestDTO.getStatusId()).orElseThrow(()
-                            -> new BusinessException(RECORD_NOT_FOUND_CODE, RECORD_NOT_FOUND)));
+                    user.setStatus(statusService.findById(userRequestDTO.getStatusId()));
                     user.setStore(userLogged.getStore());
                     setUserRole(user, userRequestDTO.getRoleId());
                 }

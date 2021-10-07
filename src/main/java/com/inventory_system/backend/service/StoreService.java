@@ -46,8 +46,7 @@ public class StoreService {
 
         if( Objects.isNull(store)){
             store = modelMapper.map(storeRequestDTO, Store.class);
-            store.setStatus(statusService.findById(storeRequestDTO.getStatusId()).orElseThrow(()
-                    -> new BusinessException(RECORD_NOT_FOUND_CODE,RECORD_NOT_FOUND)));
+            store.setStatus(statusService.findById(storeRequestDTO.getStatusId()));
             store =storeRepository.save(store);
         }else{
             throw  new BusinessException(RECORD_EXIST_CODE,RECORD_EXIST+"name");
@@ -62,8 +61,7 @@ public class StoreService {
         if (Allowed.STORE.equals(allowed) && !userLogged.getStore().getId().equals(store.getId())) {
             throw  new BusinessException(INSUFFICIENT_PRIVILEGES_CODE, INSUFFICIENT_PRIVILEGES);
         }
-        store.setStatus(statusService.findById(storeRequestDTO.getStatusId()).orElseThrow(()
-                -> new BusinessException(RECORD_NOT_FOUND_CODE, RECORD_NOT_FOUND)));
+        store.setStatus(statusService.findById(storeRequestDTO.getStatusId()));
         modelMapper.map(storeRequestDTO, store);
         store =storeRepository.save(store);
         return store;

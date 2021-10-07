@@ -1,9 +1,7 @@
 package com.inventory_system.backend.service;
 
 import com.inventory_system.backend.dto.request.provider.ProviderRequestDTO;
-import com.inventory_system.backend.enums.Allowed;
 import com.inventory_system.backend.exception.BusinessException;
-import com.inventory_system.backend.exception.UnauthorizedException;
 import com.inventory_system.backend.model.Provider;
 import com.inventory_system.backend.repository.ProviderRepository;
 import org.modelmapper.ModelMapper;
@@ -40,8 +38,7 @@ public class ProviderService {
 
         if( Objects.isNull(provider)){
             provider = modelMapper.map(providerRequestDTO, Provider.class);
-            provider.setStatus(statusService.findById(providerRequestDTO.getStatusId()).orElseThrow(()
-                    -> new BusinessException(RECORD_NOT_FOUND_CODE,RECORD_NOT_FOUND)));
+            provider.setStatus(statusService.findById(providerRequestDTO.getStatusId()));
             provider = providerRepository.save(provider);
         }else{
             throw  new BusinessException(RECORD_EXIST_CODE,RECORD_EXIST+" shortName");
@@ -49,10 +46,9 @@ public class ProviderService {
         return provider;
     }
 
-    public Provider update(ProviderRequestDTO providerRequestDTO, int id) throws BusinessException, UnauthorizedException {
+    public Provider update(ProviderRequestDTO providerRequestDTO, int id) throws BusinessException {
         Provider provider   = findById(id);
-        provider.setStatus(statusService.findById(providerRequestDTO.getStatusId()).orElseThrow(()
-                -> new BusinessException(RECORD_NOT_FOUND_CODE, RECORD_NOT_FOUND)));
+        provider.setStatus(statusService.findById(providerRequestDTO.getStatusId()));
         modelMapper.map(providerRequestDTO, provider);
         provider = providerRepository.save(provider);
         return provider;

@@ -38,8 +38,7 @@ public class ProductService {
 
         if( Objects.isNull(product)){
             product = modelMapper.map(productRequestDTO, Product.class);
-            product.setStatus(statusService.findById(productRequestDTO.getStatusId()).orElseThrow(()
-                    -> new BusinessException(RECORD_NOT_FOUND_CODE,RECORD_NOT_FOUND)));
+            product.setStatus(statusService.findById(productRequestDTO.getStatusId()));
             product =productRepository.save(product);
         }else{
             throw  new BusinessException(RECORD_EXIST_CODE,RECORD_EXIST+"shortName, barcode");
@@ -50,8 +49,7 @@ public class ProductService {
     public Product update(ProductRequestDTO productRequestDTO, int id) throws BusinessException {
         Product product   = findById(id);
 
-        product.setStatus(statusService.findById(productRequestDTO.getStatusId()).orElseThrow(()
-                -> new BusinessException(RECORD_NOT_FOUND_CODE, RECORD_NOT_FOUND)));
+        product.setStatus(statusService.findById(productRequestDTO.getStatusId()));
         /*Unique field don't map*/
         productRequestDTO.setBarcode(product.getBarcode());
         productRequestDTO.setShortName(product.getShortName());

@@ -29,6 +29,6 @@ public class Product {
     @Column
     private String image;
     /*Relations*/
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER)
     private Status status;
 }
