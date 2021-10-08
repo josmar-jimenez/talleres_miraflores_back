@@ -19,4 +19,8 @@ public class InventorySystemConstant {
 
     public static final String INVALID_SALE_REQUEST_INSUFFICIENT_STOCK = "Insuficiente stock para realizar esta operación";
     public static final int INVALID_SALE_REQUEST_INSUFFICIENT_STOCK_CODE = 7;
+
+    public static String DATE_FORMATTER = "yyyy-MM-dd";
+    public static  String TIME_FORMATTER = "HH:mm:ss";
+
 }
