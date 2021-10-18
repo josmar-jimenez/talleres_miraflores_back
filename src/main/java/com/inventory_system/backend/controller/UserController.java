@@ -1,5 +1,6 @@
 package com.inventory_system.backend.controller;
 
+import com.inventory_system.backend.dto.request.user.LoginRequestDTO;
 import com.inventory_system.backend.dto.request.user.UserRequestDTO;
 import com.inventory_system.backend.dto.response.LoginResponseDTO;
 import com.inventory_system.backend.dto.response.StandardResponse;
@@ -15,12 +16,14 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/user") 
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class UserController {
 
 	@Autowired
@@ -34,20 +37,20 @@ public class UserController {
 
 	private final int OPERATIVE = 1;
 
-	@PostMapping("login")
-	public LoginResponseDTO login(@RequestParam("nick") String nick, @RequestParam("password") String password) throws Exception {
+	@PostMapping("/login") 
+	public LoginResponseDTO login(@Valid @RequestBody LoginRequestDTO request, BindingResult bindingResult) throws Exception {
 
-		User user = userService.findByNick(nick);
+		User user = userService.findByNick(request.getNick());
 		//TODO: Usar aquí Clave ssh para encriptar la clave en front
 		// o al menos colocar un MD5
-		if(!user.getPassword().equals(password)){
+		if(!user.getPassword().equals(request.getPassword())){
 			throw new UnauthorizedException();
 		}
-		String token = tokenService.getJWTToken(nick);
-		return new LoginResponseDTO(nick, token);
+		String token = tokenService.getJWTToken(request.getNick());
+		return new LoginResponseDTO(request.getNick(), token);   
 	}
 
-	@GetMapping("/{id}")
+	@GetMapping("/{id}") 
 	public StandardResponse getUser(@PathVariable(value = "id")Integer id) throws Exception {
 		Allowed allowed = roleOperativeActionService.checkRoleOperativeAndAction(OPERATIVE, Action.QUERY.ordinal());
 		User user = userService.findById(id,allowed);
@@ -57,7 +60,7 @@ public class UserController {
 
 	}
 
-	@PostMapping
+	@PostMapping 
 	public StandardResponse createUser(@RequestBody @Valid UserRequestDTO userRequestDTO) throws Exception {
 		Allowed allowed = roleOperativeActionService.checkRoleOperativeAndAction(OPERATIVE, Action.CREATE.ordinal());
 		User user = userService.create(userRequestDTO,allowed);
@@ -66,7 +69,7 @@ public class UserController {
 				tokenService.getJWTToken(tokenService.getUserNick()));
 	}
 
-	@PutMapping("/{id}")
+	@PutMapping("/{id}") 
 	public StandardResponse updateUser(@RequestBody @Valid UserRequestDTO userRequestDTO,
 									   @PathVariable(value = "id")Integer id) throws Exception {
 		Allowed allowed = roleOperativeActionService.checkRoleOperativeAndAction(OPERATIVE, Action.UPDATE.ordinal());
@@ -76,7 +79,7 @@ public class UserController {
 				tokenService.getJWTToken(tokenService.getUserNick()));
 	}
 
-	@GetMapping
+	@GetMapping 
 	public StandardResponse getUsers(Pageable pageable) throws Exception {
 		Allowed allowed = roleOperativeActionService.checkRoleOperativeAndAction(OPERATIVE, Action.QUERY.ordinal());
 		Page<UserResponseDTO> page = userService.findAll(pageable,allowed).map(user ->
