@@ -69,4 +69,12 @@ public class StoreController {
 		return StandardResponse.createResponse(page,
 				tokenService.getJWTToken(tokenService.getUserNick()));
 	}
+
+	@DeleteMapping("/{id}")
+	public StandardResponse deleteStore( @PathVariable(value = "id")Integer id) throws Exception {
+		roleOperativeActionService.checkRoleOperativeAndAction(OPERATIVE, Action.DELETE.ordinal());
+		boolean response  = storeService.delete(id);
+		return StandardResponse.createResponse(response,
+				tokenService.getJWTToken(tokenService.getUserNick()));
+	}
 }

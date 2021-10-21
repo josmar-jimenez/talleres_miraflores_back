@@ -29,6 +29,6 @@ public class StoreDTO {
     private String image;
     /*Relations*/
     @NotNull
-    private int statusId;
+    private Integer statusId;
 
 }

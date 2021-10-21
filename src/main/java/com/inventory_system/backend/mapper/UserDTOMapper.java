@@ -25,8 +25,6 @@ public class UserDTOMapper {
                 map().setStatusId(source.getStatus().getId());
             }
         };
-
-        modelMapper.getConfiguration().setAmbiguityIgnored(true);
         modelMapper.addMappings(mapUserToUserResponseDTO);
     }
 }

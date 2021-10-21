@@ -66,4 +66,19 @@ public class StoreService {
         store =storeRepository.save(store);
         return store;
     }
+
+    public boolean delete(Integer id) throws BusinessException, UnauthorizedException {
+        User userLogged = userService.findByNick(tokenService.getUserNick());
+        Store store   = findById(id);
+        if(userLogged.getRole().getId()==1){
+            try {
+                storeRepository.delete(store);
+                return true;
+            }catch (Exception e){
+                throw  new BusinessException(RECORD_CANNOT_BE_DELETED_CODE, RECORD_CANNOT_BE_DELETED);
+            }
+        }else {
+            throw new BusinessException(INSUFFICIENT_PRIVILEGES_CODE, INSUFFICIENT_PRIVILEGES);
+        }
+    }
 }
