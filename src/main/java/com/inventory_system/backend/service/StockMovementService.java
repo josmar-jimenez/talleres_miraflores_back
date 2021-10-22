@@ -49,10 +49,10 @@ public class StockMovementService {
         }
     }
 
-    public StockMovement create(StockMovement stockMovement, User userLogged) throws BusinessException {
-        if(userLogged.getRole().getId()==1||
-                userLogged.getStore().getId().equals(stockMovement.getSourceStore())||
-                userLogged.getStore().getId().equals(stockMovement.getDestinyStore())) {
+    public StockMovement create(StockMovement stockMovement) throws BusinessException {
+        if(stockMovement.getUser().getRole().getId()==1||
+                stockMovement.getUser().getStore().getId().equals(stockMovement.getSourceStore())||
+                stockMovement.getUser().getStore().getId().equals(stockMovement.getDestinyStore())) {
             return stockMovementRepository.save(stockMovement);
         }else{
         throw new BusinessException(OPERATION_NOT_ALLOWED_CODE,OPERATION_NOT_ALLOWED);

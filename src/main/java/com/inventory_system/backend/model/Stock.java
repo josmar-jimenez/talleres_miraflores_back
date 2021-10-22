@@ -16,7 +16,7 @@ public class Stock {
     @Column
     private Integer id;
     @Column
-    private long stock;
+    private Long stock;
     /*Relations*/
     @ManyToOne(fetch = FetchType.EAGER)
     private Status status;

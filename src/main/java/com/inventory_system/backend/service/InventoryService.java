@@ -3,6 +3,7 @@ package com.inventory_system.backend.service;
 import com.inventory_system.backend.dto.common.InventoryDetailDTO;
 import com.inventory_system.backend.dto.request.inventory.InventoryRequestDTO;
 import com.inventory_system.backend.enums.Allowed;
+import com.inventory_system.backend.enums.MovementType;
 import com.inventory_system.backend.exception.BusinessException;
 import com.inventory_system.backend.exception.UnauthorizedException;
 import com.inventory_system.backend.model.*;
@@ -12,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +36,8 @@ public class InventoryService {
     private StockService stockService;
     @Autowired
     private TokenService tokenService;
+    @Autowired
+    private StockMovementService stockMovementService;
 
     public Inventory findById(int id, Allowed allowed) throws BusinessException, UnauthorizedException {
         Inventory inventory= inventoryRepository.findById(id).orElseThrow(() ->
@@ -60,6 +64,7 @@ public class InventoryService {
         }
     }
 
+    @Transactional
     public Inventory create(InventoryRequestDTO inventoryRequestDTO, Allowed allowed) throws BusinessException, UnauthorizedException {
         User userLogged = userService.findByNick(tokenService.getUserNick());
 
@@ -75,13 +80,25 @@ public class InventoryService {
                 if(Objects.isNull(stock)){
                     throw new BusinessException(RECORD_NOT_FOUND_CODE, RECORD_NOT_FOUND);
                 }
-
                 inventoryDetailList.add(new InventoryDetail(null, inventoryDetailDTO.getCantPhysical(), stock.getStock(),
                         product,inventory));
+                StockMovement stockMovement;
+                if(inventoryDetailDTO.getCantPhysical()>stock.getStock()){
+                    stockMovement = new StockMovement(null, MovementType.INVENTORY_EXCESS,
+                            inventoryDetailDTO.getCantPhysical()-stock.getStock(),
+                            userLogged,product,stock.getStore(),null);
+                    stockMovementService.create(stockMovement);
+                }else if(inventoryDetailDTO.getCantPhysical()<stock.getStock()){
+                    stockMovement = new StockMovement(null, MovementType.INVENTORY_DEFICIT,
+                            stock.getStock()-inventoryDetailDTO.getCantPhysical(),
+                            userLogged,product,stock.getStore(),null);
+                    stockMovementService.create(stockMovement);
+                }
+                stockService.updateStock(stock.getStore().getId(),product.getId(),
+                        inventoryDetailDTO.getCantPhysical()-stock.getStock());
             }
             inventory.setDetail(inventoryDetailList);
             return inventoryRepository.save(inventory);
-            /*TODO: INVOCAR MOVIMIENTO DE INVENTARIO SI HAY FALTANTE O EXCESO*/
         }else{
             throw new BusinessException(OPERATION_NOT_ALLOWED_CODE,OPERATION_NOT_ALLOWED);
         }

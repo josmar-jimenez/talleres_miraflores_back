@@ -20,7 +20,7 @@ public class StockMovement {
     @Enumerated(EnumType.STRING)
     private MovementType movementType;
     @Column
-    private Integer cant;
+    private Long cant;
     /*Relations*/
     @ManyToOne(fetch = FetchType.EAGER)
     private User user;

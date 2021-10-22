@@ -3,6 +3,7 @@ package com.inventory_system.backend.service;
 import com.inventory_system.backend.dto.common.SaleDetailDTO;
 import com.inventory_system.backend.dto.request.sale.SaleRequestDTO;
 import com.inventory_system.backend.enums.Allowed;
+import com.inventory_system.backend.enums.MovementType;
 import com.inventory_system.backend.exception.BusinessException;
 import com.inventory_system.backend.exception.UnauthorizedException;
 import com.inventory_system.backend.model.*;
@@ -41,7 +42,8 @@ public class SaleService {
     private ProductService productService;
     @Autowired
     private ModelMapper modelMapper;
-
+    @Autowired
+    private StockMovementService stockMovementService;
 
     public Sale findById(int id, Allowed allowed) throws BusinessException, UnauthorizedException {
         Sale sale= saleRepository.findById(id).orElseThrow(()
@@ -115,7 +117,11 @@ public class SaleService {
         sale = saleRepository.save(sale);
 
         for(SaleDetail saleDetail:sale.getDetail()){
-            stockService.updateStock(store.getId(),saleDetail.getProduct().getId(), saleDetail.getCant()*-1);
+            StockMovement stockMovement = new StockMovement(null, MovementType.SALE,
+                    (long) saleDetail.getCant(),userLogged,
+                    saleDetail.getProduct(),store,null);
+            stockMovementService.create(stockMovement);
+            stockService.updateStock(store.getId(),saleDetail.getProduct().getId(), saleDetail.getCant()*-1L);
         }
         return sale;
     }
