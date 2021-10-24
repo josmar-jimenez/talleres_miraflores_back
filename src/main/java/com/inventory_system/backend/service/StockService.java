@@ -118,11 +118,9 @@ public class StockService {
     public boolean delete(int id, Allowed allowed) throws BusinessException, UnauthorizedException {
         User userLogged = userService.findByNick(tokenService.getUserNick());
         Stock stockToDelete = findById(id,allowed);
-
         StockMovement stockMovement = new StockMovement(null, MovementType.STOCK_MODIFICATION,
                 -stockToDelete.getStock(),userLogged,
                 stockToDelete.getProduct(),stockToDelete.getStore(),null);
-
         stockMovementService.create(stockMovement);
         stockRepository.delete(stockToDelete);
         return true;

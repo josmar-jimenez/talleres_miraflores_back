@@ -2,7 +2,10 @@ package com.inventory_system.backend.service;
 
 import com.inventory_system.backend.dto.request.product.ProductRequestDTO;
 import com.inventory_system.backend.exception.BusinessException;
+import com.inventory_system.backend.exception.UnauthorizedException;
 import com.inventory_system.backend.model.Product;
+import com.inventory_system.backend.model.Store;
+import com.inventory_system.backend.model.User;
 import com.inventory_system.backend.repository.ProductRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +26,8 @@ public class ProductService {
     private StatusService statusService;
     @Autowired
     private ModelMapper modelMapper;
+    @Autowired
+    private ElasticSearchService elasticSearchService;
 
     public Product findById(int id) throws BusinessException {
         return productRepository.findById(id).orElseThrow(()
@@ -40,6 +45,7 @@ public class ProductService {
             product = modelMapper.map(productRequestDTO, Product.class);
             product.setStatus(statusService.findById(productRequestDTO.getStatusId()));
             product =productRepository.save(product);
+            elasticSearchService.insertUpdateDocument(product);
         }else{
             throw  new BusinessException(RECORD_EXIST_CODE,RECORD_EXIST+"shortName, barcode");
         }
@@ -55,6 +61,18 @@ public class ProductService {
         productRequestDTO.setShortName(product.getShortName());
         modelMapper.map(productRequestDTO, product);
         product =productRepository.save(product);
+        elasticSearchService.insertUpdateDocument(product);
         return product;
+    }
+
+    public boolean delete(Integer id) throws BusinessException {
+       Product product  = findById(id);
+        try {
+            productRepository.delete(product);
+            elasticSearchService.deleteDocument(product);
+            return true;
+        }catch (Exception e){
+            throw  new BusinessException(RECORD_CANNOT_BE_DELETED_CODE, RECORD_CANNOT_BE_DELETED);
+        }
     }
 }

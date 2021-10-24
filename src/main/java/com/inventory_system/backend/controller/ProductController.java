@@ -68,4 +68,12 @@ public class ProductController {
 		return StandardResponse.createResponse(page,
 				tokenService.getJWTToken(tokenService.getUserNick()));
 	}
+
+	@DeleteMapping("/{id}")
+	public StandardResponse deleteProduct( @PathVariable(value = "id")Integer id) throws Exception {
+		roleOperativeActionService.checkRoleOperativeAndAction(OPERATIVE, Action.DELETE.ordinal());
+		boolean response  = productService.delete(id);
+		return StandardResponse.createResponse(response,
+				tokenService.getJWTToken(tokenService.getUserNick()));
+	}
 }

@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.List;
 
 @Entity
 @AllArgsConstructor
@@ -31,4 +32,6 @@ public class Product {
     /*Relations*/
     @ManyToOne(fetch = FetchType.EAGER)
     private Status status;
+    @OneToMany(fetch = FetchType.EAGER)
+    private List<ProductTag> tag;
 }
