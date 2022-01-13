@@ -14,4 +14,5 @@ import lombok.Setter;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class StoreResponseDTO extends StoreDTO {
     private Integer id;
+    private String statusName;
 }

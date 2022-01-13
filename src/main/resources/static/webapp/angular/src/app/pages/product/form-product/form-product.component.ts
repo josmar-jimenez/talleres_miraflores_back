@@ -65,7 +65,7 @@ export class FormProductComponent implements OnInit {
         price: [{ value: "", disabled: this.isViewMode }, [Validators.required]],
         cost: [{ value: "", disabled: this.isViewMode }, [Validators.required]], 
         image: [{ value:"", disabled: this.isViewMode }, null],
-        statusId: [{ value: this.status_activo, disabled: this.isViewMode }, null],
+        statusId: [{ value: 1, disabled: this.isViewMode }, null],
        }
     );
 
@@ -87,7 +87,7 @@ export class FormProductComponent implements OnInit {
     this.form_data = this.form.value;   
     this.form_data.image = this.form_data.image == "" ? this.form_data.image : this.img_product_default;
 
-    let product_data = new Product( null, this.form_data.statusId.id, this.form_data.name, 
+    let product_data = new Product( null, this.form_data.statusId,"", this.form_data.name, 
                                 this.form_data.shortName, this.form_data.barcode,this.form_data.price,this.form_data.cost,
                                 this.form_data.image);
         

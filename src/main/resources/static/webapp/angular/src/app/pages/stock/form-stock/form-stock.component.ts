@@ -65,7 +65,7 @@ export class FormStockComponent implements OnInit {
         stock: [{ value: "", disabled: this.isViewMode }, Validators.required], 
         productId: [{ value: "undefined", disabled: this.isViewMode }, [Validators.required]], 
         storeId: [{ value: "undefined", disabled: this.isViewMode }, [Validators.required]],
-        statusId: [{ value: this.status_activo.id, disabled: this.isViewMode }, null],
+        statusId: [{ value: 1, disabled: this.isViewMode }, null],
        }
     );
     this.getInfoComponent();
@@ -84,7 +84,7 @@ export class FormStockComponent implements OnInit {
     this.controlLoading (true);
     
     this.form_data = this.form.value; 
-    let stock_data = new Stock( null, this.form_data.statusId, this.form_data.storeId, 
+    let stock_data = new Stock( null, this.form_data.statusId,"", this.form_data.storeId, 
                                 this.form_data.productId, this.form_data.stock, "","");
     
      

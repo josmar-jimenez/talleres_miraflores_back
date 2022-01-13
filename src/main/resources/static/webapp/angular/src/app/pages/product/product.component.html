@@ -40,7 +40,6 @@
                                         <td class="dtr-control">{{item.barcode}}</td>
                                         <td class="dtr-control">{{item.price }}</td>
                                         <td class="dtr-control">{{item.cost }}</td>
-
                                         <td class="dtr-control">
                                             <div class="user-panel mt-3 pb-3 mb-3 d-flex">
                                                 <div class="image">
@@ -49,7 +48,7 @@
                                                 </div>
                                             </div>
                                         </td>
-                                   
+                                        <td class="dtr-control">{{item.statusName }}</td>
                                         <td class="dtr-control">
                                             <app-button-list [acciones_crud]="info_component.list.acciones_crud"
                                                 [id]="item.id"></app-button-list>

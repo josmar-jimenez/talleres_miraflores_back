@@ -24,9 +24,4 @@ public class StockDTO {
     private Integer productId;
     @NotNull
     private Integer storeId;
-    @NotNull
-    private String productName;
-    @NotNull
-    private String storeName;
-
 }

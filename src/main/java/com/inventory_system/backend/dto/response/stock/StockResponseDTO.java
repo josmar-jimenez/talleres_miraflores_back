@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.NotNull;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -14,4 +16,10 @@ import lombok.Setter;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class StockResponseDTO extends StockDTO {
     private Integer id;
+    @NotNull
+    private String productName;
+    @NotNull
+    private String storeName;
+    @NotNull
+    private String statusName;
 }

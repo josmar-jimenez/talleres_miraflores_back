@@ -12,4 +12,5 @@ import lombok.Setter;
 @NoArgsConstructor
 public class ProviderResponseDTO extends ProviderDTO {
     private Integer id;
+    private String statusName;
 }

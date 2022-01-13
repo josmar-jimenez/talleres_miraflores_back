@@ -65,7 +65,7 @@ export class FormProviderComponent implements OnInit {
         phone: [{ value: "", disabled: this.isViewMode }, [Validators.required]],
         address: [{ value: "", disabled: this.isViewMode }, [Validators.required]],
         image: [{ value: this.img_store_default , disabled: this.isViewMode }, null],
-        statusId: [{ value: this.status_activo.id, disabled: this.isViewMode }, null],
+        statusId: [{ value: 1, disabled: this.isViewMode }, null],
        }
     );
 
@@ -86,7 +86,7 @@ export class FormProviderComponent implements OnInit {
     this.controlLoading (true);
     
     this.form_data = this.form.value;   
-    let provider_data = new Provider( null, this.form_data.statusId.id, this.form_data.name, 
+    let provider_data = new Provider( null, this.form_data.statusId,"", this.form_data.name, 
                                 this.form_data.shortName, this.form_data.phone,this.form_data.address,this.form_data.email,
                                 this.form_data.image);
  

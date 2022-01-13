@@ -18,36 +18,7 @@
         <div class="card-body" *ngIf="!progressing"> 
             <form  [formGroup]="form" (ngSubmit)="onSubmit()">
                     <div class="row">
-                        <div class="col-sm-3">
-                            <!-- text input -->
-                            <div class="form-group">
-                                <label> {{ info_component.owner | translate }}
-                                </label>
-                                <div class="input-group mb-2">
-                                    <div class="input-group-prepend">
-                                        <div class="input-group-text">@</div>
-                                    </div>
-                                    <input type="number" class="form-control" id="stock"
-                                        placeholder=" {{label_text.stock  | translate  }}  {{ info_component.owner | translate }}"
-                                        title=" {{label_text.stock  | translate  }}  {{ info_component.owner | translate  }}"
-                                        [ngClass]="{ 'is-invalid': submitted && f.stock.errors }" formControlName="stock"
-                                        autocomplete="new-user" />
-                                    <div *ngIf="submitted && f.stock.errors" class="invalid-feedback">
-                                        <div *ngIf="f.stock.errors.required">{{label_text.nick_label | translate }}
-                                            {{label_error.msg_error_required | translate }} </div>
-                                        <div *ngIf="f.stock.errors.minlength">
-                                            {{label_text.stock | translate }}
-                                            {{label_error.msg_error_characters_min | translate }}
-                                        </div>
-                                        <div *ngIf="f.stock.errors.maxlength">
-                                            {{label_text.stock | translate }}
-                                            {{label_error.msg_error_characters_max | translate }}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-3">
+                        <div class="col-sm-6">
                             <div class="form-group ">
                                 <label> {{label_text.producto_label | translate }} {{ info_component.owner | translate }}
                                 </label>
@@ -95,6 +66,67 @@
                                     <div *ngIf="submitted && f.storeId.errors" class="invalid-feedback">
                                         <div *ngIf="f.storeId.errors.required"> {{label_text.store_label | translate }}
                                             {{label_error.msg_error_required | translate }} </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>  
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <!-- text input -->
+                            <div class="form-group">
+                                <label> {{ info_component.owner | translate }}
+                                </label>
+                                <div class="input-group mb-2">
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text">@</div>
+                                    </div>
+                                    <input type="number" class="form-control" id="stock"
+                                        placeholder=" {{label_text.stock  | translate  }}  {{ info_component.owner | translate }}"
+                                        title=" {{label_text.stock  | translate  }}  {{ info_component.owner | translate  }}"
+                                        [ngClass]="{ 'is-invalid': submitted && f.stock.errors }" formControlName="stock"
+                                        autocomplete="new-user" />
+                                    <div *ngIf="submitted && f.stock.errors" class="invalid-feedback">
+                                        <div *ngIf="f.stock.errors.required">{{label_text.nick_label | translate }}
+                                            {{label_error.msg_error_required | translate }} </div>
+                                        <div *ngIf="f.stock.errors.minlength">
+                                            {{label_text.stock | translate }}
+                                            {{label_error.msg_error_characters_min | translate }}
+                                        </div>
+                                        <div *ngIf="f.stock.errors.maxlength">
+                                            {{label_text.stock | translate }}
+                                            {{label_error.msg_error_characters_max | translate }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label> {{label_text.status_label | translate }} {{ info_component.owner | translate }}
+                                </label>
+                                <div class="input-group mb-2">
+                                    <div class="form-check-inline">
+                                        <input class="form-check-input" type="radio" formControlName="statusId"
+                                            id="status_stock1" [value]="1" >
+                                        <label class="form-check-label" for="status_stock1">
+                                            Activo
+                                        </label>
+                                    </div>
+                                    <div class="form-check-inline">
+                                        <input class="form-check-input" type="radio" formControlName="statusId"
+                                            id="status_stock3" [value]="3">
+                                        <label class="form-check-label" for="status_stock3">
+                                            Pausado
+                                        </label>
+                                    </div>
+                                    <div class="form-check-inline">
+                                        <input class="form-check-input" type="radio" formControlName="statusId"
+                                            id="status_stock5" [value]="5">
+                                        <label class="form-check-label" for="status_stock5">
+                                            Agotado
+                                        </label>
                                     </div>
                                 </div>
                             </div>

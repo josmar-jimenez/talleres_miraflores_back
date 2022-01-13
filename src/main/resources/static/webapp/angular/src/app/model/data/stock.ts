@@ -1,13 +1,14 @@
 export class Stock {
     id: number | null;
     statusId: number;
+    statusName: string;
     storeId: number;  
     productId: number;  
     stock: number; 
     productName: string;
     storeName: string;
 
-    constructor(id: number| null, statusId: number, storeId: number, productId: number, 
+    constructor(id: number| null, statusId: number, statusName: string, storeId: number, productId: number, 
         stock: number, producName:string, storeName:string) {
         this.id = id;
         this.statusId = statusId;
@@ -16,5 +17,6 @@ export class Stock {
         this.stock = stock; 
         this.productName=producName;
         this.storeName=storeName;
+        this.statusName=statusName;
     }
 } 

@@ -12,4 +12,5 @@ import lombok.Setter;
 @NoArgsConstructor
 public class ProductResponseDTO extends ProductDTO {
     private Integer id;
+    private String statusName;
 }
