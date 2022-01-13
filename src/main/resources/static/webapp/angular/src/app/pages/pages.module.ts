@@ -30,6 +30,7 @@ import { TagComponent } from './tag/tag.component';
 import { FormTagComponent } from './tag/form-tag/form-tag.component';
 import { LoadingComponent } from './generic/loading/loading.component'; 
 import { ButtonListComponent } from './button-list/button-list.component'; 
+import { IndexComponent } from './index/index.component';
 
 const maskConfig: () => Partial<IConfig> = () => {
   return {
@@ -51,6 +52,7 @@ const maskConfig: () => Partial<IConfig> = () => {
     FormStoreComponent,
     ProductComponent, 
     ButtonListComponent,
+    IndexComponent,
     FormProductComponent, StockComponent, FormStockComponent, ProviderComponent, FormProviderComponent, 
     InventoryComponent, FormInventoryComponent, SaleComponent, FormSaleComponent, TagComponent, FormTagComponent
   ],
@@ -61,7 +63,8 @@ const maskConfig: () => Partial<IConfig> = () => {
     ErrorPagesComponent,
     UserComponent, 
     LoadingComponent,
-    LoginComponent
+    LoginComponent,
+    IndexComponent
   ],
   //schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
 })

@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { AuthService } from './services/auth/auth.service';  
 import { NotificationsService } from './services/notifications/notifications.service';
+import { Router  } from '@angular/router'; 
 
 @Component({
   selector: 'app-root',
@@ -13,8 +14,9 @@ export class AppComponent {
   public isLoggin: any = false;
   
   constructor(
-    private authService: AuthService
+    private router: Router, private authService:AuthService
   ) {
+    
     this.isLoggin = this.authService.isAuthenticated(); 
   }
 
@@ -24,4 +26,7 @@ export class AppComponent {
     return this.authService.isAuthenticated();
   }
 
+  isIndexPage(): boolean {
+    return this.router.url==='/index';
+  }
 }

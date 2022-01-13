@@ -40,19 +40,7 @@
                                             <td class="dtr-control" *ngFor="let index of item.detail ">
                                                 {{index.cant}} | {{index.price}} {{prop_glo.info_globals.monedas.default.simb_mon}}
                                             </td>
-                                        <!-- 
-                                            <td class="dtr-control">
-                                                <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-                                                    <div class="image">
-                                                        <img [src]="item.image"  class="img-circle elevation-2" title="Store Image"/> 
-                                                    </div>
-                                                </div>       
-                                            </td>
-                                            
-                                                <td class="dtr-control">{{item.statusId}}</td>
-                                                <td class="dtr-control">{{item.roleId}}</td> 
-                                                <td class="dtr-control">{{item.id}}</td>
-                                                -->
+                                       
                                             <td class="dtr-control">  
                                                 <app-button-list [acciones_crud]="info_component.list.acciones_crud" [id]="item.id"  ></app-button-list>
                                             </td>   
@@ -60,20 +48,14 @@
                                         </tr>
                                     </tbody>
                                     <tfoot>
-                                        <tr>
-                                            <th rowspan="1" colspan="1"
-                                                *ngFor="let key of info_component.list.header_item;">
-                                                {{key | translate}} </th>
-                                            <th rowspan="1" colspan="1">{{ label_text.actions | translate}} </th>
-                                        </tr>
-
                                         <tr role="row">
                                             <th rowspan="1" colspan="9">
                                                 <span class="badge bg-success rounded-pill" style="font-size: medium;">
                                                     {{ label_text.num_item_list | translate}}: {{ info_component.count_item}}
                                                 </span>
 
-                                                <a routerLink="{{ info_component.list.url_add_item }}"
+                                                <a *ngIf="actionAllowed.includes('Registrar')" 
+                                                routerLink="{{ info_component.list.url_add_item }}"
                                                     class="btn btn-outline-warning float-right" role="button"
                                                     aria-pressed="true" title="{{ label_btn.btn_add | translate}}">
                                                     <i class="fas fa-plus-circle"></i>

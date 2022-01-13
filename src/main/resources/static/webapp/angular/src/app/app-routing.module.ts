@@ -21,6 +21,7 @@ import { FormInventoryComponent } from './pages/inventory/form-inventory/form-in
 import { FormSaleComponent } from './pages/sale/form-sale/form-sale.component';
 import { FormTagComponent } from './pages/tag/form-tag/form-tag.component';
 import { FormProviderComponent } from './pages/provider/form-provider/form-provider.component';
+import { IndexComponent } from './pages/index/index.component';
 
 const routes: Routes = [ 
   { path: 'home', component: HomeComponent,canActivate: [AuthGuard]},
@@ -72,9 +73,10 @@ const routes: Routes = [
   { path: 'tag/edit/:id', component: FormTagComponent ,canActivate: [AuthGuard] },
   { path: 'tag/delete/:id', component: FormTagComponent ,canActivate: [AuthGuard] }, 
 
+  { path: 'index', component: IndexComponent },
   { path: 'login', component: LoginComponent },
   { path: 'errorPage', component:  ErrorPagesComponent },  
-  { path: '', redirectTo: 'login', pathMatch: 'full'}, 
+  { path: '', redirectTo: 'index', pathMatch: 'full'}, 
   { path: '**', redirectTo: 'home', pathMatch: 'full'}
 ];
 

@@ -42,12 +42,6 @@
                                         <td class="dtr-control">{{item.address}}</td>                                        
                                         <td class="dtr-control">{{item.emergencyPhone | mask: maskPhone }}</td>
                                         <td class="dtr-control">{{item.emergencyContact}}</td>
-                                        <!-- 
-                                            <td class="dtr-control">{{item.storeId}}</td>
-                                            <td class="dtr-control">{{item.statusId}}</td>
-                                            <td class="dtr-control">{{item.roleId}}</td> 
-                                            <td class="dtr-control">{{item.id}}</td>
-                                        -->
                                         <td class="dtr-control">
                                             <app-button-list [acciones_crud]="info_component.list.acciones_crud"
                                                 [id]="item.id"></app-button-list>
@@ -55,13 +49,6 @@
                                     </tr>
                                 </tbody>
                                 <tfoot>
-                                    <tr>
-                                        <th rowspan="1" colspan="1"
-                                            *ngFor="let key of info_component.list.header_item;">
-                                            {{key | translate}} </th>
-                                        <th rowspan="1" colspan="1">{{ label_text.actions | translate}} </th>
-                                    </tr>
-
                                     <tr role="row">
                                         <th rowspan="1" colspan="9">
                                             <span class="badge bg-success rounded-pill" style="font-size: medium;">
@@ -69,7 +56,8 @@
                                                 info_component.count_item}}
                                             </span>
 
-                                            <a routerLink="{{ info_component.list.url_add_item }}"
+                                            <a *ngIf="actionAllowed.includes('Registrar')"  
+                                                routerLink="{{ info_component.list.url_add_item }}"
                                                 class="btn btn-outline-warning float-right" role="button"
                                                 aria-pressed="true" title="{{ label_btn.btn_add | translate}}">
                                                 <i class="fas fa-plus-circle"></i>
@@ -85,21 +73,17 @@
                 </ng-template>
 
                 <ng-template #emptyBlock>
-                    <div class="row">
+                    <div class="row" >
                         <div class="col-sm-12">
                             {{ info_component.sms_empty | translate}} ...
                         </div>
-
-                        <div class="col-sm-12">
-
-                            <a routerLink="{{ info_component.list.url_add_item }}"
+                        <div class="col-sm-12" >
+                            <a  routerLink="{{ info_component.list.url_add_item }}"
                                 class="btn btn-outline-warning float-right" role="button"
                                 aria-pressed="true" title="{{ label_btn.btn_add | translate}}">
                                 <i class="fas fa-plus-circle"></i>
                             </a>
-
                         </div>
-                        
                     </div>
                 </ng-template>
             </div>

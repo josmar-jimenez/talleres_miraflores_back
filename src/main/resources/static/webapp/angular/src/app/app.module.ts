@@ -11,7 +11,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { PreloaderComponent } from './componets/preloader/preloader.component';
 import { AuthInterceptorProviders } from './helpers/auth.interceptor';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader'; 
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
 export const AppBaseHref = [
   {provide: APP_BASE_HREF, useValue: '/'}
@@ -20,7 +20,7 @@ export const AppBaseHref = [
 @NgModule({
   declarations: [
     AppComponent,
-    PreloaderComponent 
+    PreloaderComponent
   ],
   imports: [  
     BrowserModule,  

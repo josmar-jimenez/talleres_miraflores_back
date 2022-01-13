@@ -1,4 +1,4 @@
-<div *ngIf="isAuthenticated()">
+<div *ngIf="isAuthenticated()&&!isIndexPage()">
       <div class="wrapper">
             <app-mainheader></app-mainheader>
             <app-sidebar></app-sidebar>
@@ -19,11 +19,21 @@
       </div>
 </div>
 
-<div *ngIf="!isLoggin">
+<div *ngIf="!isAuthenticated()&&!isIndexPage()">
       <app-preloader></app-preloader>
       <div class="login-box">
             <ng-container *ngTemplateOutlet="template"></ng-container>
       </div>
+</div>
+
+<div *ngIf="isIndexPage()">
+      <app-indexheader></app-indexheader>
+      <section class="content index-content">                      
+            <div class="container-fluid"> 
+                  <ng-container *ngTemplateOutlet="template"></ng-container>
+            </div>
+      </section>
+      <app-footer></app-footer>
 </div>
 
 <ng-template #template> 

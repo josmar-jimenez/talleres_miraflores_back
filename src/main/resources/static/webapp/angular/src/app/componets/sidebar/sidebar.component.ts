@@ -31,7 +31,7 @@ export class SidebarComponent implements OnInit {
 
     this.router.events.subscribe( (event: Event) => {
       if (event instanceof NavigationEnd) {
-        this.modulosPermitidos = this.authService.loadModuleMenu();
+        this.modulosPermitidos = this.authService.loadModuleMenu(null);
       }
     });
 

@@ -62,13 +62,6 @@
                                     </tr>
                                 </tbody>
                                 <tfoot>
-                                    <tr>
-                                        <th rowspan="1" colspan="1"
-                                            *ngFor="let key of info_component.list.header_item;">
-                                            {{key | translate}} </th>
-                                        <th rowspan="1" colspan="1">{{ label_text.actions | translate}} </th>
-                                    </tr>
-
                                     <tr role="row">
                                         <th rowspan="1" colspan="9">
                                             <span class="badge bg-success rounded-pill" style="font-size: medium;">
@@ -76,7 +69,8 @@
                                                 info_component.count_item}}
                                             </span>
 
-                                            <a routerLink="{{ info_component.list.url_add_item }}"
+                                            <a *ngIf="actionAllowed.includes('Registrar')"
+                                            routerLink="{{ info_component.list.url_add_item }}"
                                                 class="btn btn-outline-warning float-right" role="button"
                                                 aria-pressed="true" title="{{ label_btn.btn_add | translate}}">
                                                 <i class="fas fa-plus-circle"></i>

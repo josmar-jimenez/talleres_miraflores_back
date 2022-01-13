@@ -1,7 +1,9 @@
-import { Component, OnInit, Input, OnDestroy, OnChanges } from '@angular/core'; 
-import { TranslateService } from '@ngx-translate/core'; 
+import { Component, OnInit, Input, OnDestroy, OnChanges } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import { NotificationsService } from 'src/app/services/notifications/notifications.service';
 import { propiedades_globales as prop_glo } from '../../globals';
+import { Router, Event, NavigationEnd } from '@angular/router';
+import { AuthService } from 'src/app/services/auth/auth.service';
 
 @Component({
   selector: 'app-button-list',
@@ -9,10 +11,14 @@ import { propiedades_globales as prop_glo } from '../../globals';
   styleUrls: ['./button-list.component.css']
 })
 export class ButtonListComponent implements OnInit {
-  
-  constructor(  
-        private notificationService:NotificationsService,
-        public translate: TranslateService
+
+  public actionAllowed: any = [];
+
+  constructor(
+    private notificationService: NotificationsService,
+    public translate: TranslateService,
+    private router: Router,
+    private authService: AuthService
   ) {
     translate.addLangs(prop_glo.info_globals.idiomas.config);
     translate.setDefaultLang(prop_glo.info_globals.idiomas.default);
@@ -23,6 +29,9 @@ export class ButtonListComponent implements OnInit {
   @Input() id: any;
   @Input() acciones_crud: any;
 
-  ngOnInit(): void { } 
+  ngOnInit(): void {
+    var operativeSelected = this.authService.loadModuleMenu(this.router.url);
+    this.actionAllowed = operativeSelected != null && operativeSelected.length > 0 ? operativeSelected[0].action_name : null;
+  }
 
 }

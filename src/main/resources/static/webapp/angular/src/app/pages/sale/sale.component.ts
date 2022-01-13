@@ -22,7 +22,8 @@ export class SaleComponent implements OnInit {
   public label_btn: any = prop_glo.label_btn;
   public label_text: any = prop_glo.label_component;
   public info_component : any =  prop_glo.info_globals.info_component;
-  
+  public actionAllowed:any= [];
+
   constructor(
     private router: Router, 
     private authService: AuthService,
@@ -37,6 +38,8 @@ export class SaleComponent implements OnInit {
  
   ngOnInit(): void { 
     this.getAllSales(); 
+    var userOperative = this.authService.loadModuleMenu(this.router.url);
+    this.actionAllowed = userOperative != null && userOperative.length > 0 ? userOperative[0].action_name : null;
   }
  
   getAllSales(): void {

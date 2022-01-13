@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, Event, NavigationEnd } from '@angular/router';
 import { Location } from '@angular/common';  
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { UsersService } from 'src/app/services/data/users.service'; 
@@ -23,6 +23,8 @@ export class UserComponent implements OnInit {
   public label_text: any = prop_glo.label_component;
   public info_component : any =  prop_glo.info_globals.info_component;
   
+  public actionAllowed:any= [];
+
   constructor(
     private router: Router, 
     private authService: AuthService,
@@ -37,6 +39,8 @@ export class UserComponent implements OnInit {
  
   ngOnInit(): void {  
     this.getAllUsers();  
+    var userOperative = this.authService.loadModuleMenu(this.router.url);
+    this.actionAllowed = userOperative != null && userOperative.length > 0 ? userOperative[0].action_name : null;
   }
     
   getAllUsers(): void {

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { MenuAutorization } from 'src/app/model/menu/menu-autorization';
+import { Router } from '@angular/router';
 
 const TOKEN_KEY = 'token';
 const USERNAME_KEY = 'userName';
@@ -13,7 +14,7 @@ const helper = new JwtHelperService();
 
 
 export class AuthService {
-  constructor( ) { } 
+  constructor(    private router: Router) { }
 
   public isAuthenticated(): boolean {
     const token = this.getToken();
@@ -22,7 +23,7 @@ export class AuthService {
 
   public logOut(): void {
     window.sessionStorage.clear();
-    this.reloadPage();
+    this.router.navigateByUrl('/index');
   }
 
   public setToken(token: string): void {
@@ -50,47 +51,55 @@ export class AuthService {
     return sessionStorage.getItem(AUTORIZATION_KEY);
   }
 
-  public loadModuleMenu(): MenuAutorization[] {  
-    let modulosUsuario: MenuAutorization[] = [];  
+  public loadModuleMenu(operativeUrl:any): MenuAutorization[] {
+    let modulosUsuario: MenuAutorization[] = [];
 
     let modulos: any = this.getAutorization();
-    modulos =  JSON.parse((atob(modulos))); 
+
     let modulosAutorizados: string[] = [];
 
-    modulos.forEach((module: any) => {  
+    if (modulos != null) {
+      modulos = JSON.parse((atob(modulos)));
 
-      let agregarModulo:boolean = false;
-      let existe = modulosAutorizados.indexOf(module.operative_name) != -1;
+      modulos.forEach((module: any) => {
 
-      if ( !existe ) {  
-        modulosAutorizados.push(module.operative_name);  
-        agregarModulo = true;                
-      }
-      
-      if ( agregarModulo ){
-        let acciones: string[] = [];  
-        let mod = modulosAutorizados[modulosAutorizados.length - 1];
-        
-        modulos.forEach((accion: any) => {
-          mod == accion.operative_name ?
-          acciones.push(accion.action_name) :""; 
-        });   
+        let agregarModulo: boolean = false;
+        let existe = modulosAutorizados.indexOf(module.operative_name) != -1;
 
-        modulosUsuario.push(this.createClassMenu(mod, acciones));
+        if (!existe) {
+          modulosAutorizados.push(module.operative_name);
+          agregarModulo = true;
+        }
 
-      } 
+        if (agregarModulo) {
+          let acciones: string[] = [];
+          let mod = modulosAutorizados[modulosAutorizados.length - 1];
 
-    });  
-    
-    return modulosUsuario;
+          modulos.forEach((accion: any) => {
+            mod == accion.operative_name ?
+              acciones.push(accion.action_name) : "";
+          });
+          modulosUsuario.push(this.createClassMenu(mod, acciones));
+
+        }
+
+      });
+    }
+
+    if(operativeUrl==null)
+      return modulosUsuario;
+    else{
+      let operative=operativeUrl.split("/")[1];
+      return modulosUsuario.filter(t => t.operative_name ===operative);
+    }
   }
 
-  public createClassMenu(mod: any, acciones:string[]): MenuAutorization{   
-    let objMenu = new MenuAutorization(mod,this.getSymbolClass(mod), acciones);   
+  public createClassMenu(mod: any, acciones: string[]): MenuAutorization {
+    let objMenu = new MenuAutorization(mod, this.getSymbolClass(mod), acciones);
     return objMenu;
   }
 
-  public getSymbolClass(modulo: string): string { 
+  public getSymbolClass(modulo: string): string {
     let symbol: string;
 
     switch (modulo) {

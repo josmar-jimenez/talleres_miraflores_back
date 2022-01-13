@@ -1,0 +1,28 @@
+i {
+    width: 2px;
+    position: relative;
+    right: 30px;
+    font-size: 20px;
+    line-height: 40px;
+    cursor: pointer;
+    z-index: 1;
+    color: #03045fc7;
+  }
+
+  .container-finder{
+    background: black;
+    text-align: center;
+    margin-top: 250px;
+ }
+
+ .input-finder{
+  width: 75%;
+  height: 50px;
+  padding-left: 50px;
+}
+
+.button-finder{
+  background: transparent;
+  text-align: center;
+  margin-top: 50px;
+}
