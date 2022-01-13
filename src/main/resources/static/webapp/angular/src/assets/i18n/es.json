@@ -111,6 +111,7 @@
         "profile": "Perfil",
         "nick": "Nick",
         "name": "Nombre",
+        "status": "Estatus",
         "lastname": "Apellido",
         "cellphone": "Teléfono móvil",
         "password": "Contraseña",
@@ -143,6 +144,7 @@
         "createdTime":"Hora de creación",
         "productName":"Producto",
         "storeName":"Tienda",
+        "statusName":"Estatus",
 
         "__ COMMENTARIO - LABEL ERRORES DE LOS FORMULARIOS  __": "__________ ESTA PROPIEDAD ES DE CARACTER INFORMATIVO ________",
         "is invalid": "no es valido",

@@ -2,6 +2,7 @@ export class User {
     id: Number | null
     storeId: Number;
     statusId: Number;
+    statusName: string;
     roleId: Number;
     nick: string;
     name: string;
@@ -14,13 +15,14 @@ export class User {
 
     constructor(
         id: Number | null,
-        storeId: Number, statusId: Number, roleId: Number,
-        password: string, nick: string, name: string,
+        storeId: Number, statusId: Number, statusName:string,
+        roleId: Number, password: string, nick: string, name: string,
         cellphone: string, address: string,
         email: string, emergencyPhone: string, emergencyContact: string
     ) {
         this.storeId = storeId;
         this.statusId = statusId;
+        this.statusName=statusName;
         this.roleId = roleId;
         this.nick = nick;
         this.name = name;

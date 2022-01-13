@@ -96,6 +96,7 @@ export const propiedades_globales = {
         profile_label: 'profile',
         nick_label: 'nick',
         name_label: 'name',
+        status_label: 'status',
         lastname_label: 'lastname',
         cellphone_label: 'cellphone',
         phone_label: 'phone',

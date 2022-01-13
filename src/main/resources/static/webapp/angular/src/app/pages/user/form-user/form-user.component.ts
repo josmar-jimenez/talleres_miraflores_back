@@ -73,7 +73,7 @@ export class FormUserComponent implements OnInit {
         nick: [{ value: "", disabled: this.isViewMode }, [Validators.required, Validators.minLength(4), Validators.maxLength(20)]],
         emergencyPhone: [{ value: "", disabled: this.isViewMode }, [Validators.minLength(4), Validators.nullValidator]],
         emergencyContact: [{ value: "", disabled: this.isViewMode }, [Validators.minLength(4), Validators.maxLength(100)]],
-        statusId: [{ value: this.status_activo.id, disabled: this.isViewMode }, null],
+        statusId: [{ value: 1, disabled: this.isViewMode }, Validators.required],
         password: [{ value: "", disabled: this.isViewMode }, [Validators.required, Validators.minLength(6), Validators.maxLength(20)]],
         confirmPassword: [{ value: "", disabled: this.isViewMode }, Validators.required]
       }, { validators: [ValidationConfimPass.match('password', 'confirmPassword')] }
@@ -96,7 +96,7 @@ export class FormUserComponent implements OnInit {
     this.controlLoading (true);
 
     this.form_data = this.form.value;
-    let user_data = new User(null, this.form_data.storeId, this.form_data.statusId, this.form_data.roleId,
+    let user_data = new User(null, this.form_data.storeId, this.form_data.statusId, "", this.form_data.roleId,
       this.form_data.password, this.form_data.nick, this.form_data.name, this.form_data.cellphone,
       this.form_data.address, this.form_data.email, this.form_data.emergencyPhone,
       this.form_data.emergencyContact);
@@ -189,6 +189,7 @@ export class FormUserComponent implements OnInit {
         if (existeError) {
           console.log(response.error);
         } else {
+          console.log(response.info);
           this.form.patchValue(response.info);
           this.controlLoading (false); 
         }

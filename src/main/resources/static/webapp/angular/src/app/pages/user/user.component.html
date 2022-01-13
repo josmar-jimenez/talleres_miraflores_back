@@ -42,6 +42,7 @@
                                         <td class="dtr-control">{{item.address}}</td>                                        
                                         <td class="dtr-control">{{item.emergencyPhone | mask: maskPhone }}</td>
                                         <td class="dtr-control">{{item.emergencyContact}}</td>
+                                        <td class="dtr-control">{{item.statusName}}</td>
                                         <td class="dtr-control">
                                             <app-button-list [acciones_crud]="info_component.list.acciones_crud"
                                                 [id]="item.id"></app-button-list>
