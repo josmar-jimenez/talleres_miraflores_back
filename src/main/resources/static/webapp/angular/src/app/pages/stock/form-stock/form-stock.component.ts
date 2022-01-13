@@ -85,7 +85,7 @@ export class FormStockComponent implements OnInit {
     
     this.form_data = this.form.value; 
     let stock_data = new Stock( null, this.form_data.statusId, this.form_data.storeId, 
-                                this.form_data.productId, this.form_data.stock);
+                                this.form_data.productId, this.form_data.stock, "","");
     
      
     if (! this.isCreateMode) {  

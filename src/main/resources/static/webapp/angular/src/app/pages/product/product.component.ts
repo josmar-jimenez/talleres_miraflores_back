@@ -66,6 +66,7 @@ export class ProductComponent implements OnInit {
       this.info_component.list.data = data.info.content;
     }
  
+    console.log(data.info);
     this.info_component.list.header_item = this.serviceUse.getTableHeaderName(data.info.content);
     this.controlLoading(false);
   }

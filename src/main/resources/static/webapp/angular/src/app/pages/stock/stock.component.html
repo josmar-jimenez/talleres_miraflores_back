@@ -36,21 +36,8 @@
                                     <tr class="odd"
                                         *ngFor="let item of info_component.list.data  | paginate:{itemsPerPage: 3, currentPage: info_component.list.pagination.num_page, totalItems: info_component.list.data.count_item }">
                                         <td class="dtr-control">{{item.stock}}</td>
-                                        <!--  <td class="dtr-control">{{item.total_cost}}</td>
-                                        <td class="dtr-control">{{item.created}}</td>  
-                                            <td class="dtr-control">{{item.total}}</td>   
-                                         <td class="dtr-control">
-                                            <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-                                                <div class="image">
-                                                    <img [src]="item.image"  class="img-circle elevation-2" title="Store Image"/> 
-                                                </div>
-                                             </div>       
-                                        </td>
-                                        
-                                            <td class="dtr-control">{{item.statusId}}</td>
-                                            <td class="dtr-control">{{item.roleId}}</td> 
-                                            <td class="dtr-control">{{item.id}}</td>
-                                            -->
+                                            <td class="dtr-control">{{item.productName}}</td>
+                                            <td class="dtr-control">{{item.storeName}}</td> 
                                         <td class="dtr-control">
                                             <app-button-list [acciones_crud]="info_component.list.acciones_crud"
                                                 [id]="item.id"></app-button-list>

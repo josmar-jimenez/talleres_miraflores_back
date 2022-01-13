@@ -23,6 +23,8 @@ public class StockDTOMapper {
                 map().setStatusId(source.getStatus().getId());
                 map().setProductId(source.getProduct().getId());
                 map().setStoreId(source.getStore().getId());
+                map().setProductName(source.getProduct().getName());
+                map().setStoreName(source.getStore().getName());
             }
         };
 

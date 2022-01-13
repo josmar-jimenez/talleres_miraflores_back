@@ -29,7 +29,7 @@
         "edit": "editar",
         "view": "consultar",
         "go back":"Regresar",
-        "image": "imagen",
+        "image": "Imagen",
         "emergency":"emergencia",
         "select an image":"seleccione una imagen",
         "this is an optional field":"este campo es opcional",
@@ -141,6 +141,8 @@
         "total":"Total",
         "createdDate":"Fecha de creación",
         "createdTime":"Hora de creación",
+        "productName":"Producto",
+        "storeName":"Tienda",
 
         "__ COMMENTARIO - LABEL ERRORES DE LOS FORMULARIOS  __": "__________ ESTA PROPIEDAD ES DE CARACTER INFORMATIVO ________",
         "is invalid": "no es valido",
