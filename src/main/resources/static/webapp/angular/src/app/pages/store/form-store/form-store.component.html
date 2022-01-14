@@ -185,13 +185,13 @@
                     </button>
                     <!-- Botones del formulario de editar / crear-->
                     <button type="submit" class="btn float-left" *ngIf="!isViewMode && !isDeleteMode"
-                        [ngClass]="{'btn-success': isCreateMode,  'btn-outline-info' : !isViewMode && !isCreateMode  && !isDeleteMode}"
+                        [ngClass]="{'btn-outline-success': isCreateMode,  'btn-outline-info' : !isViewMode && !isCreateMode  && !isDeleteMode}"
                         [disabled]="progressing" translate>
                         <i class="far fa-save"></i> {{ isCreateMode ? label_btn.btn_save : label_btn.btn_edit }}
                     </button>
 
                     <!-- Botones del formulario de crear-->
-                    <button type="reset" (click)="onReset()" *ngIf="isCreateMode" class="btn btn-info ml-1">
+                    <button type="reset" (click)="onReset()" *ngIf="isCreateMode" class="btn btn-outline-info ml-1">
                         <i class="fas fa-backspace"></i> {{ label_btn.btn_cleanup | translate}}
                     </button>
 
