@@ -141,7 +141,7 @@ export const propiedades_globales = {
         year_release: '2021',
         url_site_owner: 'www.google.com',
         derechos: "todos los derechos reservados.",
-        name_owner_app: 'Talleres Mirafloes C.A'
+        name_owner_app: 'Talleres Miraflores C.A'
         /*url footer globales*/
     }
 

@@ -3,7 +3,10 @@
  }
 
  .index-content{
-    background: black;
-    height: 720px;
-
+    height: 100vh;
+    background-image: url("../assets/image/home.jpg");
+    background-position:center center;
+    background-repeat:no-repeat;
+    background-size: cover;
+    opacity: 0.9;
  }
