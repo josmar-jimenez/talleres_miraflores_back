@@ -30,8 +30,8 @@ public class InventoryDTOMapper {
             @Override
             protected void configure() {
                 map().setStoreId(source.getStore().getId());
+                map().setStoreName(source.getStore().getName());
                 map().setUserId(source.getUser().getId());
-
                 using(dateToStringConverter).map(source.getCreated()).setCreatedDate(null);
                 using(timeToStringConverter).map(source.getCreated()).setCreatedTime(null);
             }
