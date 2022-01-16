@@ -23,6 +23,7 @@ public class UserDTOMapper {
                 map().setStoreId(source.getStore().getId());
                 map().setRoleId(source.getRole().getId());
                 map().setStatusId(source.getStatus().getId());
+                map().setStatusName(source.getStatus().getName());
             }
         };
         modelMapper.addMappings(mapUserToUserResponseDTO);

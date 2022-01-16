@@ -21,6 +21,7 @@ public class ProductDTOMapper {
             @Override
             protected void configure() {
                 map().setStatusId(source.getStatus().getId());
+                map().setStatusName(source.getStatus().getName());
             }
         };
 

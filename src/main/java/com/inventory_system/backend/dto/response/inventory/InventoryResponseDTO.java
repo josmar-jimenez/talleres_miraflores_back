@@ -19,6 +19,7 @@ public class InventoryResponseDTO {
     private String createdDate;
     private String createdTime;
     private String comments;
-
+    private String storeName;
+    private boolean hasMismatch;
     private List<InventoryDetailResponseDTO> detail;
 }

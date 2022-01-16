@@ -18,6 +18,7 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/product")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class ProductController {
 
 	@Autowired

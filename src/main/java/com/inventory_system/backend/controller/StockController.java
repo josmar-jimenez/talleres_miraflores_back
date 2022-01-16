@@ -19,6 +19,7 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/stock")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class StockController {
 
 	@Autowired

@@ -15,4 +15,5 @@ import lombok.Setter;
 public class UserResponseDTO extends UserDTO {
 
     private Integer id;
+    private String statusName;
 }

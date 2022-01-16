@@ -24,5 +24,4 @@ public class StockDTO {
     private Integer productId;
     @NotNull
     private Integer storeId;
-
 }

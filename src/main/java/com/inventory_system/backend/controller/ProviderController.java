@@ -18,6 +18,7 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/provider")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class ProviderController {
 
 	@Autowired
