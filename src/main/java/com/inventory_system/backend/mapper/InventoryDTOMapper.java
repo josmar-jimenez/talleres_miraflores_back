@@ -42,6 +42,7 @@ public class InventoryDTOMapper {
             @Override
             protected void configure() {
                 map().setProductId(source.getProduct().getId());
+                map().setProductName(source.getProduct().getName());
             }
         };
 

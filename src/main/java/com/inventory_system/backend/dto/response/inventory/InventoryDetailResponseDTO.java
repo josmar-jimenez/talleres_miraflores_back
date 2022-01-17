@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.NotNull;
+
 
 @Getter
 @Setter
@@ -14,4 +16,6 @@ import lombok.Setter;
 public class InventoryDetailResponseDTO extends InventoryDetailDTO {
 
     private Integer id;
+    @NotNull
+    private String productName;
 }

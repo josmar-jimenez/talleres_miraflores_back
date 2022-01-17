@@ -13,7 +13,7 @@ import java.util.Optional;
 @Repository
 public interface StockRepository extends JpaRepository<Stock, Integer> {
 
-    Page<Store> findById(int id, Pageable pageable);
+    Page<Stock> findById(int id, Pageable pageable);
 
     @Query("SELECT s FROM Stock s WHERE s.product.id=?1 AND s.store.id=?2")
     Optional<Stock> findByProductIdAndStoreId(int productId, int storeId);
