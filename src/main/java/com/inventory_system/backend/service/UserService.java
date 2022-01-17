@@ -4,6 +4,7 @@ import com.inventory_system.backend.dto.request.user.UserRequestDTO;
 import com.inventory_system.backend.enums.Allowed;
 import com.inventory_system.backend.exception.BusinessException;
 import com.inventory_system.backend.exception.UnauthorizedException;
+import com.inventory_system.backend.model.Tag;
 import com.inventory_system.backend.model.User;
 import com.inventory_system.backend.repository.UserRepository;
 import org.modelmapper.ModelMapper;
@@ -114,6 +115,15 @@ public class UserService {
         modelMapper.map(userRequestDTO, user);
         user =userRepository.save(user);
         return user;
+    }
+
+    public boolean delete(Integer id, Allowed allowed) throws BusinessException, UnauthorizedException {
+        User user = findById(id, allowed);
+        if(user.getRole().getId()!=1) {
+            user.setStatus(statusService.findById(4));
+            userRepository.save(user);
+        }
+        return true;
     }
 
     private void setUserRole(User user, int roleId) throws BusinessException {

@@ -46,6 +46,9 @@ public class UserController {
 		if(!user.getPassword().equals(request.getPassword())){
 			throw new UnauthorizedException();
 		}
+		if(user.getStatus().getId()!=1&&user.getRole().getId()!=1){
+			throw new UnauthorizedException();
+		}
 		String token = tokenService.getJWTToken(request.getNick());
 		return new LoginResponseDTO(request.getNick(), token, user.getName(), user.getStore().getName());
 	}
@@ -85,6 +88,14 @@ public class UserController {
 		Page<UserResponseDTO> page = userService.findAll(pageable,allowed).map(user ->
 				modelMapper.map(user, UserResponseDTO.class));
 		return StandardResponse.createResponse(page,
+				tokenService.getJWTToken(tokenService.getUserNick()));
+	}
+
+	@DeleteMapping("/{id}")
+	public StandardResponse deleteUser(@PathVariable(value = "id")Integer id) throws Exception {
+		Allowed allowed = roleOperativeActionService.checkRoleOperativeAndAction(OPERATIVE, Action.DELETE.ordinal());
+		boolean response = userService.delete(id,allowed);
+		return StandardResponse.createResponse(response,
 				tokenService.getJWTToken(tokenService.getUserNick()));
 	}
 }
