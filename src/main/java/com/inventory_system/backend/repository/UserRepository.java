@@ -12,12 +12,10 @@ import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
-
     @Query
     Optional<User> findByNick(String nick);
 
     Page<User> findByStore(Store store, Pageable pageable);
 
     Page<User> findById(int id, Pageable pageable);
-
 }

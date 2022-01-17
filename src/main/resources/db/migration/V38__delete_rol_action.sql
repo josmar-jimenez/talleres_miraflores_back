@@ -1,0 +1,1 @@
+DELETE FROM role_action WHERE operative_id=6 AND action_id!=1 AND action_id!=4 ;

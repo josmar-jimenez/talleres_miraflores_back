@@ -21,6 +21,7 @@ public class UserDTOMapper {
             @Override
             protected void configure() {
                 map().setStoreId(source.getStore().getId());
+                map().setStoreName(source.getStore().getName());
                 map().setRoleId(source.getRole().getId());
                 map().setStatusId(source.getStatus().getId());
                 map().setStatusName(source.getStatus().getName());
