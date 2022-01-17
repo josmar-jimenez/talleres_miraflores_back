@@ -47,7 +47,7 @@ public class UserController {
 			throw new UnauthorizedException();
 		}
 		String token = tokenService.getJWTToken(request.getNick());
-		return new LoginResponseDTO(request.getNick(), token);   
+		return new LoginResponseDTO(request.getNick(), token, user.getName(), user.getStore().getName());
 	}
 
 	@GetMapping("/{id}") 
