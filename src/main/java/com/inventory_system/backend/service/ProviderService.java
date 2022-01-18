@@ -2,6 +2,7 @@ package com.inventory_system.backend.service;
 
 import com.inventory_system.backend.dto.request.provider.ProviderRequestDTO;
 import com.inventory_system.backend.exception.BusinessException;
+import com.inventory_system.backend.model.Product;
 import com.inventory_system.backend.model.Provider;
 import com.inventory_system.backend.repository.ProviderRepository;
 import org.modelmapper.ModelMapper;
@@ -52,5 +53,15 @@ public class ProviderService {
         modelMapper.map(providerRequestDTO, provider);
         provider = providerRepository.save(provider);
         return provider;
+    }
+
+    public boolean delete(Integer id) throws BusinessException {
+        Provider provider   = findById(id);
+        try {
+            providerRepository.delete(provider);
+            return true;
+        }catch (Exception e){
+            throw  new BusinessException(RECORD_CANNOT_BE_DELETED_CODE, RECORD_CANNOT_BE_DELETED);
+        }
     }
 }

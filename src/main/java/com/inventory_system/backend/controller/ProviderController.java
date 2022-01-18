@@ -43,7 +43,7 @@ public class ProviderController {
 	}
 
 	@PostMapping
-	public StandardResponse createStore(@RequestBody @Valid ProviderRequestDTO providerRequestDTO) throws Exception {
+	public StandardResponse createProvider(@RequestBody @Valid ProviderRequestDTO providerRequestDTO) throws Exception {
 		roleOperativeActionService.checkRoleOperativeAndAction(OPERATIVE, Action.CREATE.ordinal());
 		Provider provider  = providerService.create(providerRequestDTO);
 		ProviderResponseDTO storeResponseDTO = modelMapper.map(provider, ProviderResponseDTO.class);
@@ -52,7 +52,7 @@ public class ProviderController {
 	}
 
 	@PutMapping("/{id}")
-	public StandardResponse updateUser(@RequestBody @Valid  ProviderRequestDTO providerRequestDTO,
+	public StandardResponse updateProvider(@RequestBody @Valid  ProviderRequestDTO providerRequestDTO,
 									   @PathVariable(value = "id")Integer id) throws Exception {
 		roleOperativeActionService.checkRoleOperativeAndAction(OPERATIVE, Action.UPDATE.ordinal());
 		Provider provider  = providerService.update(providerRequestDTO, id);
@@ -62,11 +62,19 @@ public class ProviderController {
 	}
 
 	@GetMapping
-	public StandardResponse getStores(Pageable pageable) throws Exception {
+	public StandardResponse getProviders(Pageable pageable) throws Exception {
 		roleOperativeActionService.checkRoleOperativeAndAction(OPERATIVE, Action.QUERY.ordinal());
 		Page<ProviderResponseDTO> page = providerService.findAll(pageable).map(provider ->
 				modelMapper.map(provider, ProviderResponseDTO.class));
 		return StandardResponse.createResponse(page,
+				tokenService.getJWTToken(tokenService.getUserNick()));
+	}
+
+	@DeleteMapping("/{id}")
+	public StandardResponse deleteProvider( @PathVariable(value = "id")Integer id) throws Exception {
+		roleOperativeActionService.checkRoleOperativeAndAction(OPERATIVE, Action.DELETE.ordinal());
+		boolean response  = providerService.delete(id);
+		return StandardResponse.createResponse(response,
 				tokenService.getJWTToken(tokenService.getUserNick()));
 	}
 }
