@@ -21,6 +21,8 @@ public class Inventory {
     private OffsetDateTime created;
     @Column
     private String comments;
+    @Column
+    private boolean hasMismatch;
     /*Relations*/
     @ManyToOne(fetch = FetchType.EAGER)
     private User user;

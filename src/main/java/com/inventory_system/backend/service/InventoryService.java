@@ -74,7 +74,7 @@ public class InventoryService {
         if(Allowed.ALL.equals(allowed)||userLogged.getStore().getId().equals(inventoryRequestDTO.getStoreId())) {
             Store store = storeService.findById(inventoryRequestDTO.getStoreId());
             Inventory inventory = new Inventory(null, OffsetDateTime.now(),
-                    inventoryRequestDTO.getComments(),userLogged,store,null);
+                    inventoryRequestDTO.getComments(),false,userLogged,store,null);
 
             List<InventoryDetail> inventoryDetailList = new ArrayList<>();
             for(InventoryDetailDTO inventoryDetailDTO : inventoryRequestDTO.getDetail() ){
@@ -91,11 +91,13 @@ public class InventoryService {
                             inventoryDetailDTO.getCantPhysical()-stock.getStock(),
                             userLogged,product,stock.getStore(),null);
                     stockMovementService.create(stockMovement);
+                    inventory.setHasMismatch(true);
                 }else if(inventoryDetailDTO.getCantPhysical()<stock.getStock()){
                     stockMovement = new StockMovement(null, MovementType.INVENTORY_DEFICIT,
                             stock.getStock()-inventoryDetailDTO.getCantPhysical(),
                             userLogged,product,stock.getStore(),null);
                     stockMovementService.create(stockMovement);
+                    inventory.setHasMismatch(true);
                 }
                 stockService.updateStock(stock.getStore().getId(),product.getId(),
                         inventoryDetailDTO.getCantPhysical()-stock.getStock());

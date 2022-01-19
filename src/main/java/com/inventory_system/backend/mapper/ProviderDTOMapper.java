@@ -1,9 +1,7 @@
 package com.inventory_system.backend.mapper;
 
-import com.inventory_system.backend.dto.request.provider.ProviderRequestDTO;
 import com.inventory_system.backend.dto.response.provider.ProviderResponseDTO;
 import com.inventory_system.backend.model.Provider;
-import com.inventory_system.backend.repository.ProviderRepository;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
 import org.springframework.beans.factory.annotation.Autowired;

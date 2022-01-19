@@ -32,6 +32,7 @@ public class InventoryDTOMapper {
                 map().setStoreId(source.getStore().getId());
                 map().setStoreName(source.getStore().getName());
                 map().setUserId(source.getUser().getId());
+                map().setHasMismatch(source.isHasMismatch());
                 using(dateToStringConverter).map(source.getCreated()).setCreatedDate(null);
                 using(timeToStringConverter).map(source.getCreated()).setCreatedTime(null);
             }

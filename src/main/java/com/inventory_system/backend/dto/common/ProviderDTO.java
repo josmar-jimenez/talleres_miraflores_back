@@ -27,7 +27,6 @@ public class ProviderDTO {
     private String email;
     @Pattern(regexp = "^[0-9]*$")
     private String phone;
-    private String image;
     /*Relations*/
     @NotNull
     private int statusId;

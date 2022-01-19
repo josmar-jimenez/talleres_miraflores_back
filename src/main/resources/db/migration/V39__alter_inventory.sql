@@ -1,0 +1,1 @@
+ALTER TABLE inventory ADD COLUMN has_mismatch BOOLEAN DEFAULT false;

@@ -10,6 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
+
+import java.util.Objects;
 
 import static com.inventory_system.backend.util.InventorySystemConstant.*;
 
@@ -51,8 +54,8 @@ public class StockMovementService {
 
     public StockMovement create(StockMovement stockMovement) throws BusinessException {
         if(stockMovement.getUser().getRole().getId()==1||
-                stockMovement.getUser().getStore().getId().equals(stockMovement.getSourceStore())||
-                stockMovement.getUser().getStore().getId().equals(stockMovement.getDestinyStore())) {
+                stockMovement.getUser().getStore().getId().equals(stockMovement.getSourceStore().getId())||
+                (Objects.nonNull(stockMovement.getDestinyStore())&&stockMovement.getUser().getStore().getId().equals(stockMovement.getDestinyStore().getId()))) {
             return stockMovementRepository.save(stockMovement);
         }else{
         throw new BusinessException(OPERATION_NOT_ALLOWED_CODE,OPERATION_NOT_ALLOWED);

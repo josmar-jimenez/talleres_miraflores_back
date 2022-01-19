@@ -12,4 +12,6 @@ public class LoginResponseDTO {
     private String token;
     private String name;
     private String storeName;
+    private int storeId;
+    private int roleId;
 }
