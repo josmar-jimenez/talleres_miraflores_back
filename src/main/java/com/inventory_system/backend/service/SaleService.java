@@ -85,9 +85,9 @@ public class SaleService {
 
         Sale sale = new Sale();
         List<SaleDetail> saleDetailList = new ArrayList<>();
-        BigDecimal totalCost = BigDecimal.TEN;
-        BigDecimal total= BigDecimal.TEN;
-        BigDecimal tax= BigDecimal.TEN;
+        BigDecimal totalCost = BigDecimal.ZERO;
+        BigDecimal total= BigDecimal.ZERO;
+        BigDecimal tax= BigDecimal.ZERO;
 
         for(SaleDetailDTO saleDetailDTO : saleRequestDTO.getDetail() ){
             Product product = productService.findById(saleDetailDTO.getProductId());
