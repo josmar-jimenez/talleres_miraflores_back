@@ -20,5 +20,10 @@ public class SaleResponseDTO {
     private Integer userId;
     private Integer storeId;
 
+    private String createdDate;
+    private String createdTime;
+    private String storeName;
+    private String userName;
+
     private List<SaleDetailResponseDTO> detail;
 }

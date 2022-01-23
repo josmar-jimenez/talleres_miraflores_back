@@ -12,12 +12,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -61,7 +64,8 @@ public class SaleService {
     }
 
     public Page<Sale> findAll(Pageable pageable, Allowed allowed) throws UnauthorizedException {
-
+        Sort sortDefault = Sort.by("created").descending();
+        pageable = PageRequest.of(pageable.getPageNumber(),pageable.getPageSize(),sortDefault);
         if(Allowed.ALL.equals(allowed)){
             return saleRepository.findAll(pageable);
         } else {
@@ -71,9 +75,9 @@ public class SaleService {
     }
 
     @Transactional
-    public Sale create(SaleRequestDTO storeRequestDTO, Allowed allowed) throws BusinessException, UnauthorizedException {
+    public Sale create(SaleRequestDTO saleRequestDTO, Allowed allowed) throws BusinessException, UnauthorizedException {
 
-        if(CollectionUtils.isEmpty(storeRequestDTO.getDetail())){
+        if(CollectionUtils.isEmpty(saleRequestDTO.getDetail())){
             throw new BusinessException(INVALID_SALE_REQUEST_NO_PRODUCT_CODE, INVALID_SALE_REQUEST_NO_PRODUCT);
         }
 
@@ -85,9 +89,9 @@ public class SaleService {
         BigDecimal total= BigDecimal.TEN;
         BigDecimal tax= BigDecimal.TEN;
 
-        for(SaleDetailDTO saleDetailDTO : storeRequestDTO.getDetail() ){
+        for(SaleDetailDTO saleDetailDTO : saleRequestDTO.getDetail() ){
             Product product = productService.findById(saleDetailDTO.getProductId());
-            Stock stock = stockService.findByProductIdAndStoreId(product.getId(), storeRequestDTO.getStoreId());
+            Stock stock = stockService.findByProductIdAndStoreId(product.getId(), saleRequestDTO.getStoreId());
             if(Objects.isNull(stock)||stock.getStock()<saleDetailDTO.getCant()){
                 throw new BusinessException(INVALID_SALE_REQUEST_INSUFFICIENT_STOCK_CODE,
                         INVALID_SALE_REQUEST_INSUFFICIENT_STOCK);
@@ -103,7 +107,7 @@ public class SaleService {
 
         Store store;
         if(Allowed.ALL.equals(allowed)){
-            store = storeService.findById(storeRequestDTO.getStoreId());
+            store = storeService.findById(saleRequestDTO.getStoreId());
         }else{
             store= userLogged.getStore();
         }
@@ -114,6 +118,7 @@ public class SaleService {
         sale.setTotal(total);
         sale.setDetail(saleDetailList);
         sale.setUser(userLogged);
+        sale.setCreated(OffsetDateTime.now());
         sale = saleRepository.save(sale);
 
         for(SaleDetail saleDetail:sale.getDetail()){

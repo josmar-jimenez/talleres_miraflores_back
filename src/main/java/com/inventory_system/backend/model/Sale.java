@@ -13,7 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class Sale {
+public class    Sale {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column

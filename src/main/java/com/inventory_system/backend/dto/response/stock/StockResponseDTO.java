@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.validation.constraints.NotNull;
+import java.math.BigDecimal;
 
 @Getter
 @Setter
@@ -16,6 +17,7 @@ import javax.validation.constraints.NotNull;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class StockResponseDTO extends StockDTO {
     private Integer id;
+    private BigDecimal productPrice;
     @NotNull
     private String productName;
     @NotNull

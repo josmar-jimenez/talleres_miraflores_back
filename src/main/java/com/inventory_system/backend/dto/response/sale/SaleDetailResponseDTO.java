@@ -17,4 +17,6 @@ public class SaleDetailResponseDTO extends SaleDetailDTO {
     private Integer id;
     private Integer saleId;
     private BigDecimal price;
+
+    private String productName;
 }
