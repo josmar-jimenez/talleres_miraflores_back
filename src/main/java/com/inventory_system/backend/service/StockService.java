@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 import java.util.Objects;
 
 import static com.inventory_system.backend.util.InventorySystemConstant.*;
@@ -34,19 +35,25 @@ public class StockService {
     private TokenService tokenService;
     @Autowired
     private StockMovementService stockMovementService;
+    @Autowired
+    private ElasticSearchService elasticSearchService;
 
     public Stock findByProductIdAndStoreId(int productId, int storeId) {
-        return stockRepository.findByProductIdAndStoreId(productId,storeId).orElse(null);
+        return stockRepository.findByProductIdAndStoreId(productId, storeId).orElse(null);
+    }
+
+    public List<Stock> findByProductId(int productId) {
+        return stockRepository.findByProductId(productId);
     }
 
     public Stock findById(int id, Allowed allowed) throws BusinessException, UnauthorizedException {
-        Stock stock= stockRepository.findById(id).orElseThrow(() ->
-                new BusinessException(RECORD_NOT_FOUND_CODE,RECORD_NOT_FOUND));
-        if(Allowed.ALL.equals(allowed)){
+        Stock stock = stockRepository.findById(id).orElseThrow(() ->
+                new BusinessException(RECORD_NOT_FOUND_CODE, RECORD_NOT_FOUND));
+        if (Allowed.ALL.equals(allowed)) {
             return stock;
         } else {
             User userLogged = userService.findByNick(tokenService.getUserNick());
-            if(!userLogged.getStore().equals(stock.getStore())){
+            if (!userLogged.getStore().equals(stock.getStore())) {
                 throw new BusinessException(INSUFFICIENT_PRIVILEGES_CODE, INSUFFICIENT_PRIVILEGES);
             }
             return stock;
@@ -54,62 +61,79 @@ public class StockService {
     }
 
     public Page<Stock> findAll(Pageable pageable, Allowed allowed) throws UnauthorizedException {
-        if(Allowed.ALL.equals(allowed)){
+        if (Allowed.ALL.equals(allowed)) {
             return stockRepository.findAll(pageable);
         } else {
             User userLogged = userService.findByNick(tokenService.getUserNick());
-            return stockRepository.findByStore(userLogged.getStore(),pageable);
+            return stockRepository.findByStore(userLogged.getStore(), pageable);
         }
     }
 
     @Transactional
     public Stock create(StockRequestDTO stockRequestDTO, Allowed allowed) throws BusinessException, UnauthorizedException {
-        Stock stockExists = findByProductIdAndStoreId(stockRequestDTO.getProductId(),stockRequestDTO.getStoreId());
-        if( Objects.isNull(stockExists)){
+        Stock stockExists = findByProductIdAndStoreId(stockRequestDTO.getProductId(), stockRequestDTO.getStoreId());
+        if (Objects.isNull(stockExists)) {
             User userLogged = userService.findByNick(tokenService.getUserNick());
-            if(Allowed.ALL.equals(allowed)||userLogged.getStore().getId().equals(stockRequestDTO.getStoreId())) {
+            if (Allowed.ALL.equals(allowed) || userLogged.getStore().getId().equals(stockRequestDTO.getStoreId())) {
 
                 Product product = productService.findById(stockRequestDTO.getProductId());
                 Store store = storeService.findById(stockRequestDTO.getStoreId());
-                Stock stock = new Stock(null,stockRequestDTO.getStock(),null,null,null);
+                Stock stock = new Stock(null, stockRequestDTO.getStock(), null, null, null);
                 stock.setProduct(product);
                 stock.setStore(store);
                 stock.setStatus(statusService.findById(stockRequestDTO.getStatusId()));
 
                 StockMovement stockMovement = new StockMovement(null, MovementType.STOCK_MODIFICATION,
-                        stockRequestDTO.getStock(),userLogged,product,store,null);
+                        stockRequestDTO.getStock(), userLogged, product, store, null);
                 stockMovementService.create(stockMovement);
+
+                if (stock.getStock() > 0 && stock.getStatus().getId()==1&&
+                        stock.getStore().getStatus().getId()==1
+                        && stock.getProduct().getId()==1)
+                        elasticSearchService.insertUpdateDocument(stock.getProduct());
                 return stockRepository.save(stock);
-            }else{
-                throw new BusinessException(OPERATION_NOT_ALLOWED_CODE,OPERATION_NOT_ALLOWED);
+            } else {
+                throw new BusinessException(OPERATION_NOT_ALLOWED_CODE, OPERATION_NOT_ALLOWED);
             }
-        }else{
-            throw  new BusinessException(RECORD_EXIST_CODE,RECORD_EXIST+"productId, storeId");
+        } else {
+            throw new BusinessException(RECORD_EXIST_CODE, RECORD_EXIST + "productId, storeId");
         }
     }
 
     @Transactional
     public Stock update(StockRequestDTO stockRequestDTO, int id, Allowed allowed) throws BusinessException, UnauthorizedException {
 
-        Stock stock   = findById(id, allowed);
+        Stock stock = findById(id, allowed);
         User userLogged = userService.findByNick(tokenService.getUserNick());
 
-        if(Allowed.ALL.equals(allowed)||stock.getStore().equals(userLogged.getStore())) {
+        if (Allowed.ALL.equals(allowed) || stock.getStore().equals(userLogged.getStore())) {
             StockMovement stockMovement = new StockMovement(null, MovementType.STOCK_MODIFICATION,
-                    stockRequestDTO.getStock()-stock.getStock(),userLogged,
-                    stock.getProduct(),stock.getStore(),null);
+                    stockRequestDTO.getStock() - stock.getStock(), userLogged,
+                    stock.getProduct(), stock.getStore(), null);
             stockMovementService.create(stockMovement);
 
             stock.setStock(stockRequestDTO.getStock());
-            if(stockRequestDTO.getStock()<1){
+            if (stockRequestDTO.getStock() < 1) {
                 /*Status agotado*/
                 stock.setStatus(statusService.findById(5));
-            }else{
-                stock.setStatus(statusService.findById(stockRequestDTO.getStatusId()));
+                stock = stockRepository.save(stock);
+                if (findByProductId(stock.getProduct().getId()).size() ==0) {
+                    elasticSearchService.deleteDocument(stock.getProduct());
+                }
+            } else {
+                Status status = statusService.findById(stockRequestDTO.getStatusId());
+                stock.setStatus(status);
+                stock = stockRepository.save(stock);
+
+                if (findByProductId(stock.getProduct().getId()).size() ==0) {
+                    elasticSearchService.deleteDocument(stock.getProduct());
+                }
+                else {
+                    elasticSearchService.insertUpdateDocument(stock.getProduct());
+                }
             }
-            stock = stockRepository.save(stock);
-        }else{
-            throw new BusinessException(OPERATION_NOT_ALLOWED_CODE,OPERATION_NOT_ALLOWED);
+        } else {
+            throw new BusinessException(OPERATION_NOT_ALLOWED_CODE, OPERATION_NOT_ALLOWED);
         }
         return stock;
     }
@@ -117,27 +141,38 @@ public class StockService {
     @Transactional
     public boolean delete(int id, Allowed allowed) throws BusinessException, UnauthorizedException {
         User userLogged = userService.findByNick(tokenService.getUserNick());
-        Stock stockToDelete = findById(id,allowed);
+        Stock stockToDelete = findById(id, allowed);
         StockMovement stockMovement = new StockMovement(null, MovementType.STOCK_MODIFICATION,
-                -stockToDelete.getStock(),userLogged,
-                stockToDelete.getProduct(),stockToDelete.getStore(),null);
+                -stockToDelete.getStock(), userLogged,
+                stockToDelete.getProduct(), stockToDelete.getStore(), null);
         stockMovementService.create(stockMovement);
         stockRepository.delete(stockToDelete);
+        if (findByProductId(stockToDelete.getProduct().getId()).size() == 0) {
+            elasticSearchService.deleteDocument(stockToDelete.getProduct());
+        }
         return true;
     }
 
     @Transactional
     public void updateStock(Integer storeId, Integer productId, Long cant) throws BusinessException {
 
-        Stock stockExists = findByProductIdAndStoreId(productId,storeId);
+        Stock stockExists = findByProductIdAndStoreId(productId, storeId);
 
-        stockExists.setStock(stockExists.getStock()+cant);
+        stockExists.setStock(stockExists.getStock() + cant);
         /*Status agotado*/
-        if(stockExists.getStock()==0)
+        if (stockExists.getStock() == 0) {
             stockExists.setStatus(statusService.findById(5));
-        else if(stockExists.getStock()<=0)
-            throw new BusinessException(INVALID_SALE_REQUEST_INSUFFICIENT_STOCK_CODE,
-                    INVALID_SALE_REQUEST_INSUFFICIENT_STOCK);
-        stockRepository.save(stockExists);
+            stockRepository.save(stockExists);
+            if (findByProductId(stockExists.getProduct().getId()).size() == 0) {
+                elasticSearchService.deleteDocument(stockExists.getProduct());
+            }else{
+                elasticSearchService.insertUpdateDocument(stockExists.getProduct());
+            }
+        } else {
+            if (stockExists.getStock() <= 0)
+                throw new BusinessException(INVALID_SALE_REQUEST_INSUFFICIENT_STOCK_CODE,
+                        INVALID_SALE_REQUEST_INSUFFICIENT_STOCK);
+            stockRepository.save(stockExists);
+        }
     }
 }

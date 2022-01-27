@@ -27,8 +27,6 @@ public class Product {
     private BigDecimal price;
     @Column
     private BigDecimal cost;
-    @Column
-    private String image;
     /*Relations*/
     @ManyToOne(fetch = FetchType.EAGER)
     private Status status;

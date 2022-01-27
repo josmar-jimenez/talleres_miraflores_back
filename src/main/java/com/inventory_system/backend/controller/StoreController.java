@@ -16,66 +16,73 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/store")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class StoreController {
 
-	@Autowired
-	TokenService tokenService;
-	@Autowired
-	RoleOperativeActionService roleOperativeActionService;
-	@Autowired
-	StoreService storeService;
-	@Autowired
-	ModelMapper modelMapper;
+    @Autowired
+    TokenService tokenService;
+    @Autowired
+    RoleOperativeActionService roleOperativeActionService;
+    @Autowired
+    StoreService storeService;
+    @Autowired
+    ModelMapper modelMapper;
 
-	private final int OPERATIVE = 2;
+    private final int OPERATIVE = 2;
 
-	@GetMapping("/{id}")
-	public StandardResponse getStore(@PathVariable(value = "id")Integer id) throws Exception {
-		roleOperativeActionService.checkRoleOperativeAndAction(OPERATIVE, Action.QUERY.ordinal());
-		Store store  = storeService.findById(id);
-		StoreResponseDTO storeResponseDTO = modelMapper.map(store, StoreResponseDTO.class);
-		return StandardResponse.createResponse(storeResponseDTO,
-				tokenService.getJWTToken(tokenService.getUserNick()));
+    @GetMapping("/{id}")
+    public StandardResponse getStore(@PathVariable(value = "id") Integer id) throws Exception {
+        roleOperativeActionService.checkRoleOperativeAndAction(OPERATIVE, Action.QUERY.ordinal());
+        Store store = storeService.findById(id);
+        StoreResponseDTO storeResponseDTO = modelMapper.map(store, StoreResponseDTO.class);
+        return StandardResponse.createResponse(storeResponseDTO,
+                tokenService.getJWTToken(tokenService.getUserNick()));
 
-	}
+    }
 
-	@PostMapping
-	public StandardResponse createStore(@RequestBody @Valid StoreRequestDTO storeRequestDTO) throws Exception {
-		Allowed allowed = roleOperativeActionService.checkRoleOperativeAndAction(OPERATIVE, Action.CREATE.ordinal());
-		Store store  =storeService.create(storeRequestDTO,allowed);
-		StoreResponseDTO storeResponseDTO = modelMapper.map(store, StoreResponseDTO.class);
-		return StandardResponse.createResponse(storeResponseDTO,
-				tokenService.getJWTToken(tokenService.getUserNick()));
-	}
+    @GetMapping("/product/{id}")
+    public StandardResponse getStoreByProductId(@PathVariable(value = "id") Integer id) throws Exception {
+        return StandardResponse.createResponse(storeService.findByProductId(id),null);
 
-	@PutMapping("/{id}")
-	public StandardResponse updateUser(@RequestBody @Valid  StoreRequestDTO storeRequestDTO,
-									   @PathVariable(value = "id")Integer id) throws Exception {
-		Allowed allowed = roleOperativeActionService.checkRoleOperativeAndAction(OPERATIVE, Action.UPDATE.ordinal());
-		Store store  = storeService.update(storeRequestDTO, id,allowed);
-		StoreResponseDTO storeResponseDTO = modelMapper.map(store, StoreResponseDTO.class);
-		return StandardResponse.createResponse(storeResponseDTO,
-				tokenService.getJWTToken(tokenService.getUserNick()));
-	}
+    }
 
-	@GetMapping
-	public StandardResponse getStores(Pageable pageable) throws Exception {
-		roleOperativeActionService.checkRoleOperativeAndAction(OPERATIVE, Action.QUERY.ordinal());
-		Page<StoreResponseDTO> page = storeService.findAll(pageable).map(store ->
-				modelMapper.map(store, StoreResponseDTO.class));
-		return StandardResponse.createResponse(page,
-				tokenService.getJWTToken(tokenService.getUserNick()));
-	}
+    @PostMapping
+    public StandardResponse createStore(@RequestBody @Valid StoreRequestDTO storeRequestDTO) throws Exception {
+        Allowed allowed = roleOperativeActionService.checkRoleOperativeAndAction(OPERATIVE, Action.CREATE.ordinal());
+        Store store = storeService.create(storeRequestDTO, allowed);
+        StoreResponseDTO storeResponseDTO = modelMapper.map(store, StoreResponseDTO.class);
+        return StandardResponse.createResponse(storeResponseDTO,
+                tokenService.getJWTToken(tokenService.getUserNick()));
+    }
 
-	@DeleteMapping("/{id}")
-	public StandardResponse deleteStore( @PathVariable(value = "id")Integer id) throws Exception {
-		roleOperativeActionService.checkRoleOperativeAndAction(OPERATIVE, Action.DELETE.ordinal());
-		boolean response  = storeService.delete(id);
-		return StandardResponse.createResponse(response,
-				tokenService.getJWTToken(tokenService.getUserNick()));
-	}
+    @PutMapping("/{id}")
+    public StandardResponse updateUser(@RequestBody @Valid StoreRequestDTO storeRequestDTO,
+                                       @PathVariable(value = "id") Integer id) throws Exception {
+        Allowed allowed = roleOperativeActionService.checkRoleOperativeAndAction(OPERATIVE, Action.UPDATE.ordinal());
+        Store store = storeService.update(storeRequestDTO, id, allowed);
+        StoreResponseDTO storeResponseDTO = modelMapper.map(store, StoreResponseDTO.class);
+        return StandardResponse.createResponse(storeResponseDTO,
+                tokenService.getJWTToken(tokenService.getUserNick()));
+    }
+
+    @GetMapping
+    public StandardResponse getStores(Pageable pageable) throws Exception {
+        roleOperativeActionService.checkRoleOperativeAndAction(OPERATIVE, Action.QUERY.ordinal());
+        Page<StoreResponseDTO> page = storeService.findAll(pageable).map(store ->
+                modelMapper.map(store, StoreResponseDTO.class));
+        return StandardResponse.createResponse(page,
+                tokenService.getJWTToken(tokenService.getUserNick()));
+    }
+
+    @DeleteMapping("/{id}")
+    public StandardResponse deleteStore(@PathVariable(value = "id") Integer id) throws Exception {
+        roleOperativeActionService.checkRoleOperativeAndAction(OPERATIVE, Action.DELETE.ordinal());
+        boolean response = storeService.delete(id);
+        return StandardResponse.createResponse(response,
+                tokenService.getJWTToken(tokenService.getUserNick()));
+    }
 }

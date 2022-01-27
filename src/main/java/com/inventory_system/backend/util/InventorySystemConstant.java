@@ -24,6 +24,6 @@ public class InventorySystemConstant {
     public static final int RECORD_CANNOT_BE_DELETED_CODE = 8;
 
     public static String DATE_FORMATTER = "yyyy-MM-dd";
-    public static  String TIME_FORMATTER = "HH:mm:ss";
+    public static String TIME_FORMATTER = "HH:mm:ss";
 
 }

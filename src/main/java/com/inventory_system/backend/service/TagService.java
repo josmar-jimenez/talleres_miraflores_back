@@ -22,36 +22,36 @@ public class TagService {
 
     public Tag findById(int id) throws BusinessException {
         return tagRepository.findById(id).orElseThrow(() ->
-                new BusinessException(RECORD_NOT_FOUND_CODE,RECORD_NOT_FOUND));
+                new BusinessException(RECORD_NOT_FOUND_CODE, RECORD_NOT_FOUND));
     }
 
-    public Tag findByName(String name){
+    public Tag findByName(String name) {
         return tagRepository.findByName(name).orElse(null);
     }
 
 
-    public Page<Tag> findAll(Pageable pageable){
+    public Page<Tag> findAll(Pageable pageable) {
         return tagRepository.findAll(pageable);
     }
 
     public Tag create(TagRequestDTO tagRequestDTO) throws BusinessException {
         Tag tagExist = findByName(tagRequestDTO.getName());
-        if( Objects.isNull(tagExist)){
-            Tag tag = new Tag(null,tagRequestDTO.getName());
-            return  tagRepository.save(tag);
-        }else{
-            throw  new BusinessException(RECORD_EXIST_CODE,RECORD_EXIST+"name");
+        if (Objects.isNull(tagExist)) {
+            Tag tag = new Tag(null, tagRequestDTO.getName());
+            return tagRepository.save(tag);
+        } else {
+            throw new BusinessException(RECORD_EXIST_CODE, RECORD_EXIST + "name");
         }
     }
 
     public Tag update(TagRequestDTO tagRequestDTO, int id) throws BusinessException {
-        Tag tag   = findById(id);
+        Tag tag = findById(id);
         Tag tagExist = findByName(tagRequestDTO.getName());
         if (!Objects.isNull(tagExist)) {
-            throw  new BusinessException(RECORD_EXIST_CODE,RECORD_EXIST+"name");
+            throw new BusinessException(RECORD_EXIST_CODE, RECORD_EXIST + "name");
         }
         tag.setName(tagRequestDTO.getName());
-        tag =tagRepository.save(tag);
+        tag = tagRepository.save(tag);
         return tag;
     }
 

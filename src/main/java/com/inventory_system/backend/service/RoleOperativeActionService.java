@@ -23,7 +23,8 @@ public class RoleOperativeActionService {
     TokenService tokenService;
     @Autowired
     UserService userService;
-    public List<RoleAction> findByRoleId(int id){
+
+    public List<RoleAction> findByRoleId(int id) {
         return roleActionRepository.findByRoleId(id);
     }
 
@@ -32,8 +33,8 @@ public class RoleOperativeActionService {
         User user = userService.findByNick(tokenService.getUserNick());
         return findByRoleId(user.getRole().getId()).stream()
                 .filter(roleAction ->
-                roleAction.getOperative().getId()==operative&&roleAction.getAction().getId()==action)
+                        roleAction.getOperative().getId() == operative && roleAction.getAction().getId() == action)
                 .findFirst().orElseThrow(() -> new BusinessException(INSUFFICIENT_PRIVILEGES_CODE, INSUFFICIENT_PRIVILEGES))
                 .getAllowed();
-        }
+    }
 }

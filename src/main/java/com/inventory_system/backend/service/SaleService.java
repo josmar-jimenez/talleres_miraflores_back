@@ -49,14 +49,14 @@ public class SaleService {
     private StockMovementService stockMovementService;
 
     public Sale findById(int id, Allowed allowed) throws BusinessException, UnauthorizedException {
-        Sale sale= saleRepository.findById(id).orElseThrow(()
-                -> new BusinessException(RECORD_NOT_FOUND_CODE,RECORD_NOT_FOUND));
+        Sale sale = saleRepository.findById(id).orElseThrow(()
+                -> new BusinessException(RECORD_NOT_FOUND_CODE, RECORD_NOT_FOUND));
 
-        if(Allowed.ALL.equals(allowed)){
+        if (Allowed.ALL.equals(allowed)) {
             return sale;
         } else {
             User userLogged = userService.findByNick(tokenService.getUserNick());
-            if(!userLogged.getStore().equals(sale.getStore())){
+            if (!userLogged.getStore().equals(sale.getStore())) {
                 throw new BusinessException(INSUFFICIENT_PRIVILEGES_CODE, INSUFFICIENT_PRIVILEGES);
             }
             return sale;
@@ -65,19 +65,19 @@ public class SaleService {
 
     public Page<Sale> findAll(Pageable pageable, Allowed allowed) throws UnauthorizedException {
         Sort sortDefault = Sort.by("created").descending();
-        pageable = PageRequest.of(pageable.getPageNumber(),pageable.getPageSize(),sortDefault);
-        if(Allowed.ALL.equals(allowed)){
+        pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sortDefault);
+        if (Allowed.ALL.equals(allowed)) {
             return saleRepository.findAll(pageable);
         } else {
             User userLogged = userService.findByNick(tokenService.getUserNick());
-            return saleRepository.findByStore(userLogged.getStore(),pageable);
+            return saleRepository.findByStore(userLogged.getStore(), pageable);
         }
     }
 
     @Transactional
     public Sale create(SaleRequestDTO saleRequestDTO, Allowed allowed) throws BusinessException, UnauthorizedException {
 
-        if(CollectionUtils.isEmpty(saleRequestDTO.getDetail())){
+        if (CollectionUtils.isEmpty(saleRequestDTO.getDetail())) {
             throw new BusinessException(INVALID_SALE_REQUEST_NO_PRODUCT_CODE, INVALID_SALE_REQUEST_NO_PRODUCT);
         }
 
@@ -86,13 +86,13 @@ public class SaleService {
         Sale sale = new Sale();
         List<SaleDetail> saleDetailList = new ArrayList<>();
         BigDecimal totalCost = BigDecimal.ZERO;
-        BigDecimal total= BigDecimal.ZERO;
-        BigDecimal tax= BigDecimal.ZERO;
+        BigDecimal total = BigDecimal.ZERO;
+        BigDecimal tax = BigDecimal.ZERO;
 
-        for(SaleDetailDTO saleDetailDTO : saleRequestDTO.getDetail() ){
+        for (SaleDetailDTO saleDetailDTO : saleRequestDTO.getDetail()) {
             Product product = productService.findById(saleDetailDTO.getProductId());
             Stock stock = stockService.findByProductIdAndStoreId(product.getId(), saleRequestDTO.getStoreId());
-            if(Objects.isNull(stock)||stock.getStock()<saleDetailDTO.getCant()){
+            if (Objects.isNull(stock) || stock.getStock() < saleDetailDTO.getCant()) {
                 throw new BusinessException(INVALID_SALE_REQUEST_INSUFFICIENT_STOCK_CODE,
                         INVALID_SALE_REQUEST_INSUFFICIENT_STOCK);
             }
@@ -101,15 +101,15 @@ public class SaleService {
             /*TODO: Sacar tax de variable de configuración de base de datos*/
             tax = tax.add(BigDecimal.valueOf(saleDetailDTO.getCant()).multiply(BigDecimal.TEN));
 
-            saleDetailList.add(new SaleDetail(null,saleDetailDTO.getCant(),
-                    product.getPrice(),product.getCost(),null,product,sale));
+            saleDetailList.add(new SaleDetail(null, saleDetailDTO.getCant(),
+                    product.getPrice(), product.getCost(), null, product, sale));
         }
 
         Store store;
-        if(Allowed.ALL.equals(allowed)){
+        if (Allowed.ALL.equals(allowed)) {
             store = storeService.findById(saleRequestDTO.getStoreId());
-        }else{
-            store= userLogged.getStore();
+        } else {
+            store = userLogged.getStore();
         }
 
         sale.setStore(store);
@@ -121,12 +121,12 @@ public class SaleService {
         sale.setCreated(OffsetDateTime.now());
         sale = saleRepository.save(sale);
 
-        for(SaleDetail saleDetail:sale.getDetail()){
+        for (SaleDetail saleDetail : sale.getDetail()) {
             StockMovement stockMovement = new StockMovement(null, MovementType.SALE,
-                    (long) saleDetail.getCant(),userLogged,
-                    saleDetail.getProduct(),store,null);
+                    (long) saleDetail.getCant(), userLogged,
+                    saleDetail.getProduct(), store, null);
             stockMovementService.create(stockMovement);
-            stockService.updateStock(store.getId(),saleDetail.getProduct().getId(), saleDetail.getCant()*-1L);
+            stockService.updateStock(store.getId(), saleDetail.getProduct().getId(), saleDetail.getCant() * -1L);
         }
         return sale;
     }

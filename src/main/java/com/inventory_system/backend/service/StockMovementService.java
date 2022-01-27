@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ObjectUtils;
 
 import java.util.Objects;
 
@@ -27,15 +26,15 @@ public class StockMovementService {
     private TokenService tokenService;
 
     public StockMovement findById(int id, Allowed allowed) throws BusinessException, UnauthorizedException {
-        StockMovement stockMovement= stockMovementRepository.findById(id).orElseThrow(() ->
-                new BusinessException(RECORD_NOT_FOUND_CODE,RECORD_NOT_FOUND));
+        StockMovement stockMovement = stockMovementRepository.findById(id).orElseThrow(() ->
+                new BusinessException(RECORD_NOT_FOUND_CODE, RECORD_NOT_FOUND));
 
-        if(Allowed.ALL.equals(allowed)){
+        if (Allowed.ALL.equals(allowed)) {
             return stockMovement;
         } else {
             User userLogged = userService.findByNick(tokenService.getUserNick());
-            if(!userLogged.getStore().equals(stockMovement.getSourceStore())&&
-                    !userLogged.getStore().equals(stockMovement.getDestinyStore())){
+            if (!userLogged.getStore().equals(stockMovement.getSourceStore()) &&
+                    !userLogged.getStore().equals(stockMovement.getDestinyStore())) {
                 throw new BusinessException(INSUFFICIENT_PRIVILEGES_CODE, INSUFFICIENT_PRIVILEGES);
             }
             return stockMovement;
@@ -43,23 +42,23 @@ public class StockMovementService {
     }
 
     public Page<StockMovement> findAll(Pageable pageable, Allowed allowed) throws UnauthorizedException {
-        if(Allowed.ALL.equals(allowed)){
+        if (Allowed.ALL.equals(allowed)) {
             return stockMovementRepository.findAll(pageable);
         } else {
             User userLogged = userService.findByNick(tokenService.getUserNick());
             return stockMovementRepository.findBySourceStoreOrDestinyStore(
-                    userLogged.getStore(),userLogged.getStore(),pageable);
+                    userLogged.getStore(), userLogged.getStore(), pageable);
         }
     }
 
     public StockMovement create(StockMovement stockMovement) throws BusinessException {
-        if(stockMovement.getUser().getRole().getId()==1||
-                stockMovement.getUser().getStore().getId().equals(stockMovement.getSourceStore().getId())||
-                (Objects.nonNull(stockMovement.getDestinyStore())&&stockMovement.getUser().getStore().getId().equals(stockMovement.getDestinyStore().getId()))) {
+        if (stockMovement.getUser().getRole().getId() == 1 ||
+                stockMovement.getUser().getStore().getId().equals(stockMovement.getSourceStore().getId()) ||
+                (Objects.nonNull(stockMovement.getDestinyStore()) && stockMovement.getUser().getStore().getId().equals(stockMovement.getDestinyStore().getId()))) {
             return stockMovementRepository.save(stockMovement);
-        }else{
-        throw new BusinessException(OPERATION_NOT_ALLOWED_CODE,OPERATION_NOT_ALLOWED);
-    }
+        } else {
+            throw new BusinessException(OPERATION_NOT_ALLOWED_CODE, OPERATION_NOT_ALLOWED);
+        }
     }
 
 }

@@ -47,7 +47,7 @@ public class AutocompleteController {
 
     @GetMapping("/getSuggestion")
     public StandardResponse getSuggestion(
-            @RequestParam(name = "input")String input, @RequestParam(name = "tags", required = false)List<String> tags){
-        return StandardResponse.createResponse(startup.getSuggestion(input, tags), tokenService.getJWTToken(tokenService.getUserNick()));
+            @RequestParam(name = "input") String input, @RequestParam(name = "tags", required = false) List<String> tags) {
+        return StandardResponse.createResponse(startup.getSuggestion(input, tags), null);
     }
 }

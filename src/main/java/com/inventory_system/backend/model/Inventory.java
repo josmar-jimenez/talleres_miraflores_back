@@ -28,6 +28,6 @@ public class Inventory {
     private User user;
     @ManyToOne(fetch = FetchType.EAGER)
     private Store store;
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL,mappedBy = "inventory")
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "inventory")
     private List<InventoryDetail> detail;
 }

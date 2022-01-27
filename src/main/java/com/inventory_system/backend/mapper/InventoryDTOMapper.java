@@ -25,7 +25,7 @@ public class InventoryDTOMapper {
     ModelMapper modelMapper;
 
     @PostConstruct
-    public void onCreate(){
+    public void onCreate() {
         PropertyMap<Inventory, InventoryResponseDTO> mapInventoryToInventoryResponseDTO = new PropertyMap<Inventory, InventoryResponseDTO>() {
             @Override
             protected void configure() {
@@ -53,8 +53,8 @@ public class InventoryDTOMapper {
     }
 
     Converter<OffsetDateTime, String> dateToStringConverter = context ->
-            (context.getSource()!= null? DateTimeFormatter.ofPattern(DATE_FORMATTER).format(context.getSource()):"");
+            (context.getSource() != null ? DateTimeFormatter.ofPattern(DATE_FORMATTER).format(context.getSource()) : "");
 
     Converter<OffsetDateTime, String> timeToStringConverter = context ->
-            (context.getSource()!= null? DateTimeFormatter.ofPattern(TIME_FORMATTER).format(context.getSource()):"");
+            (context.getSource() != null ? DateTimeFormatter.ofPattern(TIME_FORMATTER).format(context.getSource()) : "");
 }

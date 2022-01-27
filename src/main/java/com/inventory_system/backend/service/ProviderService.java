@@ -27,28 +27,28 @@ public class ProviderService {
 
     public Provider findById(int id) throws BusinessException {
         return providerRepository.findById(id).orElseThrow(()
-                -> new BusinessException(RECORD_NOT_FOUND_CODE,RECORD_NOT_FOUND));
+                -> new BusinessException(RECORD_NOT_FOUND_CODE, RECORD_NOT_FOUND));
     }
 
-    public Page<Provider> findAll(Pageable pageable){
+    public Page<Provider> findAll(Pageable pageable) {
         return providerRepository.findAll(pageable);
     }
 
     public Provider create(ProviderRequestDTO providerRequestDTO) throws BusinessException {
         Provider provider = providerRepository.findByName(providerRequestDTO.getName()).orElse(null);
 
-        if( Objects.isNull(provider)){
+        if (Objects.isNull(provider)) {
             provider = modelMapper.map(providerRequestDTO, Provider.class);
             provider.setStatus(statusService.findById(providerRequestDTO.getStatusId()));
             provider = providerRepository.save(provider);
-        }else{
-            throw  new BusinessException(RECORD_EXIST_CODE,RECORD_EXIST+" shortName");
+        } else {
+            throw new BusinessException(RECORD_EXIST_CODE, RECORD_EXIST + " shortName");
         }
         return provider;
     }
 
     public Provider update(ProviderRequestDTO providerRequestDTO, int id) throws BusinessException {
-        Provider provider   = findById(id);
+        Provider provider = findById(id);
         provider.setStatus(statusService.findById(providerRequestDTO.getStatusId()));
         modelMapper.map(providerRequestDTO, provider);
         provider = providerRepository.save(provider);
@@ -56,12 +56,12 @@ public class ProviderService {
     }
 
     public boolean delete(Integer id) throws BusinessException {
-        Provider provider   = findById(id);
+        Provider provider = findById(id);
         try {
             providerRepository.delete(provider);
             return true;
-        }catch (Exception e){
-            throw  new BusinessException(RECORD_CANNOT_BE_DELETED_CODE, RECORD_CANNOT_BE_DELETED);
+        } catch (Exception e) {
+            throw new BusinessException(RECORD_CANNOT_BE_DELETED_CODE, RECORD_CANNOT_BE_DELETED);
         }
     }
 }

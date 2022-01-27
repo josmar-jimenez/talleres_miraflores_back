@@ -29,7 +29,6 @@ public class ProductDTO {
     private BigDecimal price;
     @NotNull
     private BigDecimal cost;
-    private String image;
     /*Relations*/
     @NotNull
     private int statusId;

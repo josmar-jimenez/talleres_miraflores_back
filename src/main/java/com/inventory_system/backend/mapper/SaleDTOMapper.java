@@ -26,7 +26,7 @@ public class SaleDTOMapper {
     ModelMapper modelMapper;
 
     @PostConstruct
-    public void onCreate(){
+    public void onCreate() {
         PropertyMap<Sale, SaleResponseDTO> mapSaleToSaleResponseDTO = new PropertyMap<Sale, SaleResponseDTO>() {
             @Override
             protected void configure() {
@@ -55,8 +55,8 @@ public class SaleDTOMapper {
     }
 
     Converter<OffsetDateTime, String> dateToStringConverter = context ->
-            (context.getSource()!= null? DateTimeFormatter.ofPattern(DATE_FORMATTER).format(context.getSource()):"");
+            (context.getSource() != null ? DateTimeFormatter.ofPattern(DATE_FORMATTER).format(context.getSource()) : "");
 
     Converter<OffsetDateTime, String> timeToStringConverter = context ->
-            (context.getSource()!= null? DateTimeFormatter.ofPattern(TIME_FORMATTER).format(context.getSource()):"");
+            (context.getSource() != null ? DateTimeFormatter.ofPattern(TIME_FORMATTER).format(context.getSource()) : "");
 }

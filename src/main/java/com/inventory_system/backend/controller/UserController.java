@@ -22,81 +22,81 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/user") 
+@RequestMapping("/user")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class UserController {
 
-	@Autowired
-	TokenService tokenService;
-	@Autowired
-	UserService userService;
-	@Autowired
-	RoleOperativeActionService roleOperativeActionService;
-	@Autowired
-	ModelMapper modelMapper;
+    @Autowired
+    TokenService tokenService;
+    @Autowired
+    UserService userService;
+    @Autowired
+    RoleOperativeActionService roleOperativeActionService;
+    @Autowired
+    ModelMapper modelMapper;
 
-	private final int OPERATIVE = 1;
+    private final int OPERATIVE = 1;
 
-	@PostMapping("/login") 
-	public LoginResponseDTO login(@Valid @RequestBody LoginRequestDTO request, BindingResult bindingResult) throws Exception {
+    @PostMapping("/login")
+    public LoginResponseDTO login(@Valid @RequestBody LoginRequestDTO request, BindingResult bindingResult) throws Exception {
 
-		User user = userService.findByNick(request.getNick());
-		//TODO: Usar aquí Clave ssh para encriptar la clave en front
-		// o al menos colocar un MD5
-		if(!user.getPassword().equals(request.getPassword())){
-			throw new UnauthorizedException();
-		}
-		if(user.getStatus().getId()!=1&&user.getRole().getId()!=1){
-			throw new UnauthorizedException();
-		}
-		String token = tokenService.getJWTToken(request.getNick());
-		return new LoginResponseDTO(request.getNick(), token,
-				user.getName(), user.getStore().getName(), user.getStore().getId(), user.getRole().getId());
-	}
+        User user = userService.findByNick(request.getNick());
+        //TODO: Usar aquí Clave ssh para encriptar la clave en front
+        // o al menos colocar un MD5
+        if (!user.getPassword().equals(request.getPassword())) {
+            throw new UnauthorizedException();
+        }
+        if (user.getStatus().getId() != 1 && user.getRole().getId() != 1) {
+            throw new UnauthorizedException();
+        }
+        String token = tokenService.getJWTToken(request.getNick());
+        return new LoginResponseDTO(request.getNick(), token,
+                user.getName(), user.getStore().getName(), user.getStore().getId(), user.getRole().getId());
+    }
 
-	@GetMapping("/{id}") 
-	public StandardResponse getUser(@PathVariable(value = "id")Integer id) throws Exception {
-		Allowed allowed = roleOperativeActionService.checkRoleOperativeAndAction(OPERATIVE, Action.QUERY.ordinal());
-		User user = userService.findById(id,allowed);
-		UserResponseDTO userResponseDTO = modelMapper.map(user, UserResponseDTO.class);
-		return StandardResponse.createResponse(userResponseDTO,
-				tokenService.getJWTToken(tokenService.getUserNick()));
+    @GetMapping("/{id}")
+    public StandardResponse getUser(@PathVariable(value = "id") Integer id) throws Exception {
+        Allowed allowed = roleOperativeActionService.checkRoleOperativeAndAction(OPERATIVE, Action.QUERY.ordinal());
+        User user = userService.findById(id, allowed);
+        UserResponseDTO userResponseDTO = modelMapper.map(user, UserResponseDTO.class);
+        return StandardResponse.createResponse(userResponseDTO,
+                tokenService.getJWTToken(tokenService.getUserNick()));
 
-	}
+    }
 
-	@PostMapping 
-	public StandardResponse createUser(@RequestBody @Valid UserRequestDTO userRequestDTO) throws Exception {
-		Allowed allowed = roleOperativeActionService.checkRoleOperativeAndAction(OPERATIVE, Action.CREATE.ordinal());
-		User user = userService.create(userRequestDTO,allowed);
-		UserResponseDTO userResponseDTO = modelMapper.map(user, UserResponseDTO.class);
-		return StandardResponse.createResponse(userResponseDTO,
-				tokenService.getJWTToken(tokenService.getUserNick()));
-	}
+    @PostMapping
+    public StandardResponse createUser(@RequestBody @Valid UserRequestDTO userRequestDTO) throws Exception {
+        Allowed allowed = roleOperativeActionService.checkRoleOperativeAndAction(OPERATIVE, Action.CREATE.ordinal());
+        User user = userService.create(userRequestDTO, allowed);
+        UserResponseDTO userResponseDTO = modelMapper.map(user, UserResponseDTO.class);
+        return StandardResponse.createResponse(userResponseDTO,
+                tokenService.getJWTToken(tokenService.getUserNick()));
+    }
 
-	@PutMapping("/{id}") 
-	public StandardResponse updateUser(@RequestBody @Valid UserRequestDTO userRequestDTO,
-									   @PathVariable(value = "id")Integer id) throws Exception {
-		Allowed allowed = roleOperativeActionService.checkRoleOperativeAndAction(OPERATIVE, Action.UPDATE.ordinal());
-		User user = userService.update(userRequestDTO, id,allowed);
-		UserResponseDTO userResponseDTO = modelMapper.map(user, UserResponseDTO.class);
-		return StandardResponse.createResponse(userResponseDTO,
-				tokenService.getJWTToken(tokenService.getUserNick()));
-	}
+    @PutMapping("/{id}")
+    public StandardResponse updateUser(@RequestBody @Valid UserRequestDTO userRequestDTO,
+                                       @PathVariable(value = "id") Integer id) throws Exception {
+        Allowed allowed = roleOperativeActionService.checkRoleOperativeAndAction(OPERATIVE, Action.UPDATE.ordinal());
+        User user = userService.update(userRequestDTO, id, allowed);
+        UserResponseDTO userResponseDTO = modelMapper.map(user, UserResponseDTO.class);
+        return StandardResponse.createResponse(userResponseDTO,
+                tokenService.getJWTToken(tokenService.getUserNick()));
+    }
 
-	@GetMapping 
-	public StandardResponse getUsers(Pageable pageable) throws Exception {
-		Allowed allowed = roleOperativeActionService.checkRoleOperativeAndAction(OPERATIVE, Action.QUERY.ordinal());
-		Page<UserResponseDTO> page = userService.findAll(pageable,allowed).map(user ->
-				modelMapper.map(user, UserResponseDTO.class));
-		return StandardResponse.createResponse(page,
-				tokenService.getJWTToken(tokenService.getUserNick()));
-	}
+    @GetMapping
+    public StandardResponse getUsers(Pageable pageable) throws Exception {
+        Allowed allowed = roleOperativeActionService.checkRoleOperativeAndAction(OPERATIVE, Action.QUERY.ordinal());
+        Page<UserResponseDTO> page = userService.findAll(pageable, allowed).map(user ->
+                modelMapper.map(user, UserResponseDTO.class));
+        return StandardResponse.createResponse(page,
+                tokenService.getJWTToken(tokenService.getUserNick()));
+    }
 
-	@DeleteMapping("/{id}")
-	public StandardResponse deleteUser(@PathVariable(value = "id")Integer id) throws Exception {
-		Allowed allowed = roleOperativeActionService.checkRoleOperativeAndAction(OPERATIVE, Action.DELETE.ordinal());
-		boolean response = userService.delete(id,allowed);
-		return StandardResponse.createResponse(response,
-				tokenService.getJWTToken(tokenService.getUserNick()));
-	}
+    @DeleteMapping("/{id}")
+    public StandardResponse deleteUser(@PathVariable(value = "id") Integer id) throws Exception {
+        Allowed allowed = roleOperativeActionService.checkRoleOperativeAndAction(OPERATIVE, Action.DELETE.ordinal());
+        boolean response = userService.delete(id, allowed);
+        return StandardResponse.createResponse(response,
+                tokenService.getJWTToken(tokenService.getUserNick()));
+    }
 }

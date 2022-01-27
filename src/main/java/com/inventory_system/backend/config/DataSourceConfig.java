@@ -12,11 +12,11 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableTransactionManagement
 @EnableJpaRepositories(basePackages = "com.inventory_system.backend.model")
 public class DataSourceConfig {
-	@Bean
-	@Primary
-	@ConfigurationProperties("spring.datasource")
-	public DataSourceProperties dataSourceProperties() {
-		return new DataSourceProperties();
-	}
+    @Bean
+    @Primary
+    @ConfigurationProperties("spring.datasource")
+    public DataSourceProperties dataSourceProperties() {
+        return new DataSourceProperties();
+    }
 
 }

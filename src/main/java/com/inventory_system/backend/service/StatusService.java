@@ -17,13 +17,13 @@ public class StatusService {
     @Autowired
     private StatusRepository statusRepository;
 
-    public List<Status> getStatus(){
+    public List<Status> getStatus() {
         return statusRepository.findAll();
     }
 
     public Status findById(int id) throws BusinessException {
         return statusRepository.findById(id).orElseThrow(() ->
-                new BusinessException(RECORD_NOT_FOUND_CODE,RECORD_NOT_FOUND));
+                new BusinessException(RECORD_NOT_FOUND_CODE, RECORD_NOT_FOUND));
 
     }
 }

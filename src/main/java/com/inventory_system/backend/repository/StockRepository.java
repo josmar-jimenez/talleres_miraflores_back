@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -19,4 +20,7 @@ public interface StockRepository extends JpaRepository<Stock, Integer> {
     Optional<Stock> findByProductIdAndStoreId(int productId, int storeId);
 
     Page<Stock> findByStore(Store store, Pageable pageable);
+
+    @Query("SELECT s FROM Stock s WHERE s.product.id=?1 AND s.product.status.id=1 and s.store.status.id=1 and s.status.id=1")
+    List<Stock> findByProductId(int productId);
 }

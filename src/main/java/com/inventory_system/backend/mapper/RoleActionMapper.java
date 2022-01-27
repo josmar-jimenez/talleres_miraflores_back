@@ -16,8 +16,8 @@ public class RoleActionMapper {
     ModelMapper modelMapper;
 
     @PostConstruct
-    public void onCreate(){
-        PropertyMap<RoleAction,RoleOperativeActionResponseDTO> mapRoleActionToRoleOperativeActionResponseDTO
+    public void onCreate() {
+        PropertyMap<RoleAction, RoleOperativeActionResponseDTO> mapRoleActionToRoleOperativeActionResponseDTO
                 = new PropertyMap<RoleAction, RoleOperativeActionResponseDTO>() {
             @Override
             protected void configure() {

@@ -11,7 +11,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-public class SaleRequestDTO{
+public class SaleRequestDTO {
 
     @NotNull
     Integer storeId;

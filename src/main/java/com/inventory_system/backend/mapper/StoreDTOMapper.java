@@ -16,7 +16,7 @@ public class StoreDTOMapper {
     ModelMapper modelMapper;
 
     @PostConstruct
-    public void onCreate(){
+    public void onCreate() {
         PropertyMap<Store, StoreResponseDTO> mapStoreToStoreResponseDTO = new PropertyMap<Store, StoreResponseDTO>() {
             @Override
             protected void configure() {

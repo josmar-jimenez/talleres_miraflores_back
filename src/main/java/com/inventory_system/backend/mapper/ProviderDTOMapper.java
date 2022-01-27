@@ -16,7 +16,7 @@ public class ProviderDTOMapper {
     ModelMapper modelMapper;
 
     @PostConstruct
-    public void onCreate(){
+    public void onCreate() {
         PropertyMap<Provider, ProviderResponseDTO> mapProviderToProviderResponseDTO = new PropertyMap<Provider, ProviderResponseDTO>() {
             @Override
             protected void configure() {

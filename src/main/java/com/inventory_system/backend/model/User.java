@@ -30,9 +30,9 @@ public class User {
     private String email;
     @Column
     private String password;
-    @Column(name="emergency_phone")
+    @Column(name = "emergency_phone")
     private String emergencyPhone;
-    @Column(name="emergency_contact")
+    @Column(name = "emergency_contact")
     private String emergencyContact;
     /*Relations*/
     @ManyToOne(fetch = FetchType.EAGER)

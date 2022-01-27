@@ -21,60 +21,60 @@ import javax.validation.Valid;
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class ProviderController {
 
-	@Autowired
-	TokenService tokenService;
-	@Autowired
-	RoleOperativeActionService roleOperativeActionService;
-	@Autowired
-	ProviderService providerService;
-	@Autowired
-	ModelMapper modelMapper;
+    @Autowired
+    TokenService tokenService;
+    @Autowired
+    RoleOperativeActionService roleOperativeActionService;
+    @Autowired
+    ProviderService providerService;
+    @Autowired
+    ModelMapper modelMapper;
 
-	private final int OPERATIVE = 5;
+    private final int OPERATIVE = 5;
 
-	@GetMapping("/{id}")
-	public StandardResponse getProvider(@PathVariable(value = "id")Integer id) throws Exception {
-		roleOperativeActionService.checkRoleOperativeAndAction(OPERATIVE, Action.QUERY.ordinal());
-		Provider provider  = providerService.findById(id);
-		ProviderResponseDTO providerResponseDTO = modelMapper.map(provider, ProviderResponseDTO.class);
-		return StandardResponse.createResponse(providerResponseDTO,
-				tokenService.getJWTToken(tokenService.getUserNick()));
+    @GetMapping("/{id}")
+    public StandardResponse getProvider(@PathVariable(value = "id") Integer id) throws Exception {
+        roleOperativeActionService.checkRoleOperativeAndAction(OPERATIVE, Action.QUERY.ordinal());
+        Provider provider = providerService.findById(id);
+        ProviderResponseDTO providerResponseDTO = modelMapper.map(provider, ProviderResponseDTO.class);
+        return StandardResponse.createResponse(providerResponseDTO,
+                tokenService.getJWTToken(tokenService.getUserNick()));
 
-	}
+    }
 
-	@PostMapping
-	public StandardResponse createProvider(@RequestBody @Valid ProviderRequestDTO providerRequestDTO) throws Exception {
-		roleOperativeActionService.checkRoleOperativeAndAction(OPERATIVE, Action.CREATE.ordinal());
-		Provider provider  = providerService.create(providerRequestDTO);
-		ProviderResponseDTO storeResponseDTO = modelMapper.map(provider, ProviderResponseDTO.class);
-		return StandardResponse.createResponse(storeResponseDTO,
-				tokenService.getJWTToken(tokenService.getUserNick()));
-	}
+    @PostMapping
+    public StandardResponse createProvider(@RequestBody @Valid ProviderRequestDTO providerRequestDTO) throws Exception {
+        roleOperativeActionService.checkRoleOperativeAndAction(OPERATIVE, Action.CREATE.ordinal());
+        Provider provider = providerService.create(providerRequestDTO);
+        ProviderResponseDTO storeResponseDTO = modelMapper.map(provider, ProviderResponseDTO.class);
+        return StandardResponse.createResponse(storeResponseDTO,
+                tokenService.getJWTToken(tokenService.getUserNick()));
+    }
 
-	@PutMapping("/{id}")
-	public StandardResponse updateProvider(@RequestBody @Valid  ProviderRequestDTO providerRequestDTO,
-									   @PathVariable(value = "id")Integer id) throws Exception {
-		roleOperativeActionService.checkRoleOperativeAndAction(OPERATIVE, Action.UPDATE.ordinal());
-		Provider provider  = providerService.update(providerRequestDTO, id);
-		ProviderResponseDTO storeResponseDTO = modelMapper.map(provider, ProviderResponseDTO.class);
-		return StandardResponse.createResponse(storeResponseDTO,
-				tokenService.getJWTToken(tokenService.getUserNick()));
-	}
+    @PutMapping("/{id}")
+    public StandardResponse updateProvider(@RequestBody @Valid ProviderRequestDTO providerRequestDTO,
+                                           @PathVariable(value = "id") Integer id) throws Exception {
+        roleOperativeActionService.checkRoleOperativeAndAction(OPERATIVE, Action.UPDATE.ordinal());
+        Provider provider = providerService.update(providerRequestDTO, id);
+        ProviderResponseDTO storeResponseDTO = modelMapper.map(provider, ProviderResponseDTO.class);
+        return StandardResponse.createResponse(storeResponseDTO,
+                tokenService.getJWTToken(tokenService.getUserNick()));
+    }
 
-	@GetMapping
-	public StandardResponse getProviders(Pageable pageable) throws Exception {
-		roleOperativeActionService.checkRoleOperativeAndAction(OPERATIVE, Action.QUERY.ordinal());
-		Page<ProviderResponseDTO> page = providerService.findAll(pageable).map(provider ->
-				modelMapper.map(provider, ProviderResponseDTO.class));
-		return StandardResponse.createResponse(page,
-				tokenService.getJWTToken(tokenService.getUserNick()));
-	}
+    @GetMapping
+    public StandardResponse getProviders(Pageable pageable) throws Exception {
+        roleOperativeActionService.checkRoleOperativeAndAction(OPERATIVE, Action.QUERY.ordinal());
+        Page<ProviderResponseDTO> page = providerService.findAll(pageable).map(provider ->
+                modelMapper.map(provider, ProviderResponseDTO.class));
+        return StandardResponse.createResponse(page,
+                tokenService.getJWTToken(tokenService.getUserNick()));
+    }
 
-	@DeleteMapping("/{id}")
-	public StandardResponse deleteProvider( @PathVariable(value = "id")Integer id) throws Exception {
-		roleOperativeActionService.checkRoleOperativeAndAction(OPERATIVE, Action.DELETE.ordinal());
-		boolean response  = providerService.delete(id);
-		return StandardResponse.createResponse(response,
-				tokenService.getJWTToken(tokenService.getUserNick()));
-	}
+    @DeleteMapping("/{id}")
+    public StandardResponse deleteProvider(@PathVariable(value = "id") Integer id) throws Exception {
+        roleOperativeActionService.checkRoleOperativeAndAction(OPERATIVE, Action.DELETE.ordinal());
+        boolean response = providerService.delete(id);
+        return StandardResponse.createResponse(response,
+                tokenService.getJWTToken(tokenService.getUserNick()));
+    }
 }

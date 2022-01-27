@@ -22,44 +22,44 @@ import javax.validation.Valid;
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class InventoryController {
 
-	@Autowired
-	TokenService tokenService;
-	@Autowired
-	RoleOperativeActionService roleOperativeActionService;
-	@Autowired
-	InventoryService inventoryService;
-	@Autowired
-	ModelMapper modelMapper;
+    @Autowired
+    TokenService tokenService;
+    @Autowired
+    RoleOperativeActionService roleOperativeActionService;
+    @Autowired
+    InventoryService inventoryService;
+    @Autowired
+    ModelMapper modelMapper;
 
-	private final int OPERATIVE = 6;
+    private final int OPERATIVE = 6;
 
-	@GetMapping("/{id}")
-	public StandardResponse getInventory(@PathVariable(value = "id")Integer id) throws Exception {
-		Allowed allowed =roleOperativeActionService.checkRoleOperativeAndAction(OPERATIVE, Action.QUERY.ordinal());
-		Inventory inventory  = inventoryService.findById(id, allowed);
-		InventoryResponseDTO stockResponseDTO = modelMapper.map(inventory, InventoryResponseDTO.class);
-		return StandardResponse.createResponse(stockResponseDTO,
-				tokenService.getJWTToken(tokenService.getUserNick()));
+    @GetMapping("/{id}")
+    public StandardResponse getInventory(@PathVariable(value = "id") Integer id) throws Exception {
+        Allowed allowed = roleOperativeActionService.checkRoleOperativeAndAction(OPERATIVE, Action.QUERY.ordinal());
+        Inventory inventory = inventoryService.findById(id, allowed);
+        InventoryResponseDTO stockResponseDTO = modelMapper.map(inventory, InventoryResponseDTO.class);
+        return StandardResponse.createResponse(stockResponseDTO,
+                tokenService.getJWTToken(tokenService.getUserNick()));
 
-	}
+    }
 
-	@PostMapping
-	public StandardResponse createInventory(@RequestBody @Valid InventoryRequestDTO inventoryRequestDTO) throws Exception {
-		Allowed allowed= roleOperativeActionService.checkRoleOperativeAndAction(OPERATIVE, Action.CREATE.ordinal());
-		Inventory inventory  = inventoryService.create(inventoryRequestDTO,allowed);
-		InventoryResponseDTO stockResponseDTO = modelMapper.map(inventory, InventoryResponseDTO.class);
-		return StandardResponse.createResponse(stockResponseDTO,
-				tokenService.getJWTToken(tokenService.getUserNick()));
-	}
+    @PostMapping
+    public StandardResponse createInventory(@RequestBody @Valid InventoryRequestDTO inventoryRequestDTO) throws Exception {
+        Allowed allowed = roleOperativeActionService.checkRoleOperativeAndAction(OPERATIVE, Action.CREATE.ordinal());
+        Inventory inventory = inventoryService.create(inventoryRequestDTO, allowed);
+        InventoryResponseDTO stockResponseDTO = modelMapper.map(inventory, InventoryResponseDTO.class);
+        return StandardResponse.createResponse(stockResponseDTO,
+                tokenService.getJWTToken(tokenService.getUserNick()));
+    }
 
 
-	@GetMapping
-	public StandardResponse getInventories(Pageable pageable) throws Exception {
-		Allowed allowed = roleOperativeActionService.checkRoleOperativeAndAction(OPERATIVE, Action.QUERY.ordinal());
-		Page<InventoryResponseDTO> page = inventoryService.findAll(pageable, allowed).map(inventory ->
-				modelMapper.map(inventory, InventoryResponseDTO.class));
-		return StandardResponse.createResponse(page,
-				tokenService.getJWTToken(tokenService.getUserNick()));
-	}
+    @GetMapping
+    public StandardResponse getInventories(Pageable pageable) throws Exception {
+        Allowed allowed = roleOperativeActionService.checkRoleOperativeAndAction(OPERATIVE, Action.QUERY.ordinal());
+        Page<InventoryResponseDTO> page = inventoryService.findAll(pageable, allowed).map(inventory ->
+                modelMapper.map(inventory, InventoryResponseDTO.class));
+        return StandardResponse.createResponse(page,
+                tokenService.getJWTToken(tokenService.getUserNick()));
+    }
 
 }

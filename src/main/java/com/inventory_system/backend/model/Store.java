@@ -23,8 +23,6 @@ public class Store {
     private String email;
     @Column
     private String phone;
-    @Column
-    private String image;
     /*Relations*/
     @ManyToOne(fetch = FetchType.EAGER)
     private Status status;

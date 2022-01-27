@@ -13,7 +13,7 @@ public class RoleService {
     @Autowired
     private RoleRepository roleRepository;
 
-    public Optional<Role> findById(int id){
+    public Optional<Role> findById(int id) {
         return roleRepository.findById(id);
     }
 }

@@ -15,12 +15,12 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @NoArgsConstructor
 public class LoginRequestDTO extends UserDTO {
-	
-	@NotBlank
-	@NotNull
-	@NotEmpty
-	private String nick;
-	   
+
+    @NotBlank
+    @NotNull
+    @NotEmpty
+    private String nick;
+
     @NotBlank
     @NotNull
     @NotEmpty

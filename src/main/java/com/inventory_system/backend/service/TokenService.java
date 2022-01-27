@@ -17,10 +17,10 @@ import java.util.stream.Collectors;
 public class TokenService {
 
     @Value("${jwt.secretKey}")
-    private  String SECRET;
+    private String SECRET;
 
     @Value("${jwt.tokenTimeout}")
-    private  String TOKEN_TIMEOUT;
+    private String TOKEN_TIMEOUT;
 
     @Autowired
     private HttpServletRequest request;
@@ -29,12 +29,12 @@ public class TokenService {
         List<GrantedAuthority> grantedAuthorities = AuthorityUtils
                 .commaSeparatedStringToAuthorityList("ROLE_USER");
         String token = Jwts.builder().setId("backendID").setSubject(username)
-                .claim("authorities",grantedAuthorities.stream()
+                .claim("authorities", grantedAuthorities.stream()
                         .map(GrantedAuthority::getAuthority)
                         .collect(Collectors.toList()))
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + Integer.valueOf(TOKEN_TIMEOUT)*1000))
-                .signWith(SignatureAlgorithm.HS512,	SECRET.getBytes()).compact();
+                .setExpiration(new Date(System.currentTimeMillis() + Integer.valueOf(TOKEN_TIMEOUT) * 1000))
+                .signWith(SignatureAlgorithm.HS512, SECRET.getBytes()).compact();
         return "Bearer " + token;
     }
 

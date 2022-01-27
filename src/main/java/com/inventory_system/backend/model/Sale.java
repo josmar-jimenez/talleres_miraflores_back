@@ -13,7 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class    Sale {
+public class Sale {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
@@ -31,6 +31,6 @@ public class    Sale {
     private User user;
     @ManyToOne(fetch = FetchType.EAGER)
     private Store store;
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL,mappedBy = "sale")
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "sale")
     private List<SaleDetail> detail;
 }

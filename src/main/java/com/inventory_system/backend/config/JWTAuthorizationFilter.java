@@ -25,58 +25,58 @@ import io.jsonwebtoken.UnsupportedJwtException;
 @Component
 public class JWTAuthorizationFilter extends OncePerRequestFilter {
 
-	@Value("${jwt.secretKey}")
-	private  String SECRET;
+    @Value("${jwt.secretKey}")
+    private String SECRET;
 
-	private final String HEADER = "Authorization";
-	private final String PREFIX = "Bearer ";
+    private final String HEADER = "Authorization";
+    private final String PREFIX = "Bearer ";
 
-	@Override
-	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
-		try {
-			if (existJWTToken(request, response)) {
-				Claims claims = validateToken(request);
-				if (claims.get("authorities") != null) {
-					setUpSpringAuthentication(claims);
-				} else {
-					SecurityContextHolder.clearContext();
-				}
-			} else {
-					SecurityContextHolder.clearContext();
-			}
-			chain.doFilter(request, response);
-		} catch (ExpiredJwtException | UnsupportedJwtException | MalformedJwtException e) {
-			response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-			response.sendError(HttpServletResponse.SC_FORBIDDEN, e.getMessage());
-			return;
-		}
-	}	
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
+        try {
+            if (existJWTToken(request, response)) {
+                Claims claims = validateToken(request);
+                if (claims.get("authorities") != null) {
+                    setUpSpringAuthentication(claims);
+                } else {
+                    SecurityContextHolder.clearContext();
+                }
+            } else {
+                SecurityContextHolder.clearContext();
+            }
+            chain.doFilter(request, response);
+        } catch (ExpiredJwtException | UnsupportedJwtException | MalformedJwtException e) {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            response.sendError(HttpServletResponse.SC_FORBIDDEN, e.getMessage());
+            return;
+        }
+    }
 
-	private Claims validateToken(HttpServletRequest request) {
-		String jwtToken = request.getHeader(HEADER).replace(PREFIX, "");
-		return Jwts.parser().setSigningKey(SECRET.getBytes()).parseClaimsJws(jwtToken).getBody();
-	}
+    private Claims validateToken(HttpServletRequest request) {
+        String jwtToken = request.getHeader(HEADER).replace(PREFIX, "");
+        return Jwts.parser().setSigningKey(SECRET.getBytes()).parseClaimsJws(jwtToken).getBody();
+    }
 
-	/**
-	 * Metodo para autenticarnos dentro del flujo de Spring
-	 * 
-	 * @param claims
-	 */
-	private void setUpSpringAuthentication(Claims claims) {
-		@SuppressWarnings("unchecked")
-		List<String> authorities = (List) claims.get("authorities");
+    /**
+     * Metodo para autenticarnos dentro del flujo de Spring
+     *
+     * @param claims
+     */
+    private void setUpSpringAuthentication(Claims claims) {
+        @SuppressWarnings("unchecked")
+        List<String> authorities = (List) claims.get("authorities");
 
-		UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(claims.getSubject(), null,
-				authorities.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
-		SecurityContextHolder.getContext().setAuthentication(auth);
+        UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(claims.getSubject(), null,
+                authorities.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
+        SecurityContextHolder.getContext().setAuthentication(auth);
 
-	}
+    }
 
-	private boolean existJWTToken(HttpServletRequest request, HttpServletResponse res) {
-		String authenticationHeader = request.getHeader(HEADER);
-		if (authenticationHeader == null || !authenticationHeader.startsWith(PREFIX))
-			return false;
-		return true;
-	}
+    private boolean existJWTToken(HttpServletRequest request, HttpServletResponse res) {
+        String authenticationHeader = request.getHeader(HEADER);
+        if (authenticationHeader == null || !authenticationHeader.startsWith(PREFIX))
+            return false;
+        return true;
+    }
 
 }

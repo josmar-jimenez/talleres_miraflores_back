@@ -14,20 +14,26 @@ import java.util.List;
 @Service
 public class ElasticSearchService {
 
-  @Autowired
-  ElasticSearchConnection elasticSearchConnection;
+    @Autowired
+    ElasticSearchConnection elasticSearchConnection;
 
-  @Value("${elasticSearch.size}")
-  String SUGGESTION_PAGE_SIZE;
+    @Value("${elasticSearch.size}")
+    String SUGGESTION_PAGE_SIZE;
 
-  public void createIndex() {
-    elasticSearchConnection.createIndex();
-  }
+    public void createIndex() {
+        elasticSearchConnection.createIndex();
+    }
 
-  public void insertUpdateDocument(Product product){elasticSearchConnection.insertDocument(product);}
+    public void insertUpdateDocument(Product product) {
+        elasticSearchConnection.insertDocument(product);
+    }
 
-  public List<ProductResponseDTO> getSuggestion(String input, List<String> tags){ return elasticSearchConnection.search(input,tags,SUGGESTION_PAGE_SIZE);}
+    public List<ProductResponseDTO> getSuggestion(String input, List<String> tags) {
+        return elasticSearchConnection.search(input, tags, SUGGESTION_PAGE_SIZE);
+    }
 
-  public void deleteDocument(Product product){elasticSearchConnection.deleteDocument(product);}
+    public void deleteDocument(Product product) {
+        elasticSearchConnection.deleteDocument(product);
+    }
 
 }

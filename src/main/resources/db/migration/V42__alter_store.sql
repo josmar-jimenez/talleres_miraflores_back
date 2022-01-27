@@ -1,0 +1,2 @@
+ALTER TABLE store DROP COLUMN image;
+

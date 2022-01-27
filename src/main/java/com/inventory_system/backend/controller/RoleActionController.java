@@ -20,30 +20,30 @@ import java.util.List;
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class RoleActionController {
 
-	@Autowired
-	TokenService tokenService;
-	@Autowired
-	UserService userService;
-	@Autowired
-	RoleOperativeActionService roleOperativeActionService;
-	@Autowired
-	ModelMapper modelMapper;
+    @Autowired
+    TokenService tokenService;
+    @Autowired
+    UserService userService;
+    @Autowired
+    RoleOperativeActionService roleOperativeActionService;
+    @Autowired
+    ModelMapper modelMapper;
 
-	@GetMapping
-	public StandardResponse getUserAllowedAction() throws Exception {
-		String nick = tokenService.getUserNick();
-		User user = userService.findByNick(nick);
-		String token = tokenService.getJWTToken(nick);
+    @GetMapping
+    public StandardResponse getUserAllowedAction() throws Exception {
+        String nick = tokenService.getUserNick();
+        User user = userService.findByNick(nick);
+        String token = tokenService.getJWTToken(nick);
 
-		List<RoleAction> roleOperativeAction =
-				roleOperativeActionService.findByRoleId(user.getRole().getId());
-		List<RoleOperativeActionResponseDTO> roleOperativeActionResponseDTOS = new ArrayList<>();
-		if(!CollectionUtils.isEmpty(roleOperativeAction)){
-			roleOperativeAction.forEach(roleAction ->
-					roleOperativeActionResponseDTOS.add(modelMapper.map(roleAction, RoleOperativeActionResponseDTO.class)));
-		}
-		return StandardResponse.createResponse(roleOperativeActionResponseDTOS, token);
-	}
+        List<RoleAction> roleOperativeAction =
+                roleOperativeActionService.findByRoleId(user.getRole().getId());
+        List<RoleOperativeActionResponseDTO> roleOperativeActionResponseDTOS = new ArrayList<>();
+        if (!CollectionUtils.isEmpty(roleOperativeAction)) {
+            roleOperativeAction.forEach(roleAction ->
+                    roleOperativeActionResponseDTOS.add(modelMapper.map(roleAction, RoleOperativeActionResponseDTO.class)));
+        }
+        return StandardResponse.createResponse(roleOperativeActionResponseDTOS, token);
+    }
 
 
 }

@@ -16,7 +16,7 @@ public class UserDTOMapper {
     ModelMapper modelMapper;
 
     @PostConstruct
-    public void onCreate(){
+    public void onCreate() {
         PropertyMap<User, UserResponseDTO> mapUserToUserResponseDTO = new PropertyMap<User, UserResponseDTO>() {
             @Override
             protected void configure() {
