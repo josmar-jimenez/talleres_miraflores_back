@@ -89,7 +89,7 @@ public class StockService {
 
                 if (stock.getStock() > 0 && stock.getStatus().getId()==1&&
                         stock.getStore().getStatus().getId()==1
-                        && stock.getProduct().getId()==1)
+                        && stock.getProduct().getStatus().getId()==1)
                         elasticSearchService.insertUpdateDocument(stock.getProduct());
                 return stockRepository.save(stock);
             } else {
