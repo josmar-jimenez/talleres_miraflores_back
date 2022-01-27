@@ -255,9 +255,11 @@ public class ElasticSearchConnection {
         try {
             createClient();
             response = restClient.search(searchRequest, RequestOptions.DEFAULT);
+            closeClient();
             return getSuggestions(response);
         } catch (IOException ex) {
             log.error("Error in autocomplete search", ex);
+            closeClient();
             return null;
         }
     }
