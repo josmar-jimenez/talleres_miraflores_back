@@ -47,7 +47,7 @@ public class ProductService {
         List<ProductResponseDTO> productResponseDTOList2 =new ArrayList<>();
         productRepository.findAllActiveById(productsIdList).forEach(product ->
                 productResponseDTOList2.add(modelMapper.map(product, ProductResponseDTO.class)));
-        return productResponseDTOList;
+        return productResponseDTOList2;
     }
 
     public Product create(ProductRequestDTO productRequestDTO) throws BusinessException {
