@@ -64,8 +64,10 @@ public class SaleService {
     }
 
     public Page<Sale> findAll(Pageable pageable, Allowed allowed) throws UnauthorizedException {
-        Sort sortDefault = Sort.by("created").descending();
-        pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sortDefault);
+        if(pageable.getSort().isEmpty()) {
+            Sort sortDefault = Sort.by("created").descending();
+            pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sortDefault);
+        }
         if (Allowed.ALL.equals(allowed)) {
             return saleRepository.findAll(pageable);
         } else {

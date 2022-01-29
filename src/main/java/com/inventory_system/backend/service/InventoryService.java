@@ -57,8 +57,10 @@ public class InventoryService {
     }
 
     public Page<Inventory> findAll(Pageable pageable, Allowed allowed) throws UnauthorizedException {
-        Sort sortDefault = Sort.by("created").descending();
-        pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sortDefault);
+        if(pageable.getSort().isEmpty()){
+            Sort sortDefault = Sort.by("created").descending();
+            pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sortDefault);
+        }
         if (Allowed.ALL.equals(allowed)) {
             return inventoryRepository.findAll(pageable);
         } else {

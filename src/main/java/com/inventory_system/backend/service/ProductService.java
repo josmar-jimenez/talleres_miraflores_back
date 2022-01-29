@@ -8,7 +8,9 @@ import com.inventory_system.backend.repository.ProductRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -37,6 +39,10 @@ public class ProductService {
     }
 
     public Page<Product> findAll(Pageable pageable) {
+        if(pageable.getSort().isEmpty()) {
+            Sort sortDefault = Sort.by("id").descending();
+            pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sortDefault);
+        }
         return productRepository.findAll(pageable);
     }
 

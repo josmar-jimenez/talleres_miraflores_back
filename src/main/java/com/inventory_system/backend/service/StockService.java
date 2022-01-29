@@ -63,9 +63,10 @@ public class StockService {
     }
 
     public Page<Stock> findAll(Pageable pageable, Allowed allowed) throws UnauthorizedException {
-        Sort sortDefault = Sort.by("id").descending();
-        pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sortDefault);
-
+        if(pageable.getSort().isEmpty()) {
+            Sort sortDefault = Sort.by("id").descending();
+            pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sortDefault);
+        }
         if (Allowed.ALL.equals(allowed)) {
             return stockRepository.findAll(pageable);
         } else {
