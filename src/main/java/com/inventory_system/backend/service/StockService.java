@@ -9,7 +9,9 @@ import com.inventory_system.backend.model.*;
 import com.inventory_system.backend.repository.StockRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -61,6 +63,9 @@ public class StockService {
     }
 
     public Page<Stock> findAll(Pageable pageable, Allowed allowed) throws UnauthorizedException {
+        Sort sortDefault = Sort.by("id").descending();
+        pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sortDefault);
+
         if (Allowed.ALL.equals(allowed)) {
             return stockRepository.findAll(pageable);
         } else {

@@ -10,7 +10,9 @@ import com.inventory_system.backend.repository.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
@@ -55,6 +57,9 @@ public class UserService {
     }
 
     public Page<User> findAll(Pageable pageable, Allowed allowed) throws UnauthorizedException {
+        Sort sortDefault = Sort.by("id").descending();
+        pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sortDefault);
+
         if (Allowed.ALL.equals(allowed)) {
             return userRepository.findAll(pageable);
         } else {

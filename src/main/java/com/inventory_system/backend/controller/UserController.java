@@ -46,6 +46,7 @@ public class UserController {
         if (!user.getPassword().equals(request.getPassword())) {
             throw new UnauthorizedException();
         }
+        //Role active = 1
         if (user.getStatus().getId() != 1 && user.getRole().getId() != 1) {
             throw new UnauthorizedException();
         }

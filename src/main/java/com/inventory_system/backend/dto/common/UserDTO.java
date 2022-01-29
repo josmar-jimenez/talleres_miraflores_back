@@ -19,7 +19,7 @@ public class UserDTO {
 
     @NotNull
     @NotEmpty
-    @Pattern(regexp = "^[a-zA-Z0-9_]*$")
+    @Pattern(regexp = "^[a-zA-Z0-9_-]*$")
     private String nick;
     @NotEmpty
     private String name;

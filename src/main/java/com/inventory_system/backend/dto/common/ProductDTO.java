@@ -21,7 +21,7 @@ public class ProductDTO {
     private String name;
     @NotNull
     @NotEmpty
-    @Pattern(regexp = "^[a-zA-Z0-9_]*$")
+    @Pattern(regexp = "^[a-zA-Z0-9_-]*$")
     private String shortName;
     @Pattern(regexp = "^[a-zA-Z0-9_]*$")
     private String barcode;
