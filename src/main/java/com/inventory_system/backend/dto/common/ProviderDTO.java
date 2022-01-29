@@ -18,7 +18,7 @@ public class ProviderDTO {
     private String name;
     @NotNull
     @NotEmpty
-    @Pattern(regexp = "^[a-zA-Z0-9_]*$")
+    @Pattern(regexp = "^[a-zA-Z0-9_-]*$")
     private String shortName;
     @NotNull
     @NotEmpty
