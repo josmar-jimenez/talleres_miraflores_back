@@ -22,9 +22,7 @@ import org.springframework.util.CollectionUtils;
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
-import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalAccessor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -78,7 +76,6 @@ public class SaleService {
         }if(SummaryTimeType.MONTH.equals(type)){
             fromDate = fromDate.minusDays(fromDate.getDayOfMonth()).truncatedTo(ChronoUnit.DAYS);
         }
-        System.out.println(fromDate);
         if (userLogged.getRole().getId()==1) {
             return saleRepository.findByCreatedGreaterThan(fromDate);
         } else if(userLogged.getRole().getId()==2) {

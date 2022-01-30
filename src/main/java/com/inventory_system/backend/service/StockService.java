@@ -75,6 +75,16 @@ public class StockService {
         }
     }
 
+    public List<Stock> findProductLowStock() throws UnauthorizedException {
+
+        User userLogged = userService.findByNick(tokenService.getUserNick());
+        if (userLogged.getRole().getId()==1) {
+            return stockRepository.findByStockLessThan(10l);
+        } else  {
+            return stockRepository.findByStoreAndStockLessThan(userLogged.getStore(),10l);
+        }
+    }
+
     @Transactional
     public Stock create(StockRequestDTO stockRequestDTO, Allowed allowed) throws BusinessException, UnauthorizedException {
         Stock stockExists = findByProductIdAndStoreId(stockRequestDTO.getProductId(), stockRequestDTO.getStoreId());

@@ -4,6 +4,7 @@ import com.inventory_system.backend.dto.common.InventoryDetailDTO;
 import com.inventory_system.backend.dto.request.inventory.InventoryRequestDTO;
 import com.inventory_system.backend.enums.Allowed;
 import com.inventory_system.backend.enums.MovementType;
+import com.inventory_system.backend.enums.SummaryTimeType;
 import com.inventory_system.backend.exception.BusinessException;
 import com.inventory_system.backend.exception.UnauthorizedException;
 import com.inventory_system.backend.model.*;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.OffsetDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -53,6 +55,26 @@ public class InventoryService {
                 throw new BusinessException(INSUFFICIENT_PRIVILEGES_CODE, INSUFFICIENT_PRIVILEGES);
             }
             return inventory;
+        }
+    }
+
+    public List<Inventory> findAllFromLastType(SummaryTimeType type) throws UnauthorizedException {
+
+        User userLogged = userService.findByNick(tokenService.getUserNick());
+        OffsetDateTime fromDate = OffsetDateTime.now();
+        if(SummaryTimeType.DAY.equals(type)){
+            fromDate = OffsetDateTime.now().truncatedTo(ChronoUnit.DAYS);
+        }else if(SummaryTimeType.WEEK.equals(type)){
+            fromDate = fromDate.minusDays(fromDate.getDayOfWeek().getValue()-1).truncatedTo(ChronoUnit.DAYS);
+        }if(SummaryTimeType.MONTH.equals(type)){
+            fromDate = fromDate.minusDays(fromDate.getDayOfMonth()).truncatedTo(ChronoUnit.DAYS);
+        }
+        if (userLogged.getRole().getId()==1) {
+            return inventoryRepository.findByHasMismatchAndCreatedGreaterThan(true,fromDate);
+        } else if(userLogged.getRole().getId()==2) {
+            return inventoryRepository.findByHasMismatchAndStoreAndCreatedGreaterThan(true,userLogged.getStore(),fromDate);
+        } else{
+            return inventoryRepository.findByHasMismatchAndUserAndCreatedGreaterThan(true,userLogged,fromDate);
         }
     }
 

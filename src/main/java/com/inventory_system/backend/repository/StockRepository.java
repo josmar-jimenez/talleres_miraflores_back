@@ -23,4 +23,8 @@ public interface StockRepository extends JpaRepository<Stock, Integer> {
 
     @Query("SELECT s FROM Stock s WHERE s.product.id=?1 AND s.product.status.id=1 and s.store.status.id=1 and s.status.id=1")
     List<Stock> findByProductId(int productId);
+
+    List<Stock> findByStockLessThan(Long minimumStock);
+
+    List<Stock> findByStoreAndStockLessThan(Store store, Long minimumStock);
 }
