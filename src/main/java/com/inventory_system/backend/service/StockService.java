@@ -51,7 +51,7 @@ public class StockService {
     public Stock findById(int id, Allowed allowed) throws BusinessException, UnauthorizedException {
         Stock stock = stockRepository.findById(id).orElseThrow(() ->
                 new BusinessException(RECORD_NOT_FOUND_CODE, RECORD_NOT_FOUND));
-        if (Allowed.ALL.equals(allowed)) {
+/*        if (Allowed.ALL.equals(allowed)) {
             return stock;
         } else {
             User userLogged = userService.findByNick(tokenService.getUserNick());
@@ -59,7 +59,8 @@ public class StockService {
                 throw new BusinessException(INSUFFICIENT_PRIVILEGES_CODE, INSUFFICIENT_PRIVILEGES);
             }
             return stock;
-        }
+        }*/
+        return stock;
     }
 
     public Page<Stock> findAll(Pageable pageable, Allowed allowed) throws UnauthorizedException {
@@ -67,12 +68,13 @@ public class StockService {
             Sort sortDefault = Sort.by("id").descending();
             pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sortDefault);
         }
-        if (Allowed.ALL.equals(allowed)) {
+        return stockRepository.findAll(pageable);
+/*        if (Allowed.ALL.equals(allowed)) {
             return stockRepository.findAll(pageable);
         } else {
             User userLogged = userService.findByNick(tokenService.getUserNick());
             return stockRepository.findByStore(userLogged.getStore(), pageable);
-        }
+        }*/
     }
 
     public List<Stock> findProductLowStock() throws UnauthorizedException {
