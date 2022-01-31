@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 
 import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
 import static com.inventory_system.backend.util.InventorySystemConstant.DATE_FORMATTER;
@@ -23,6 +24,8 @@ public class InventoryDTOMapper {
 
     @Autowired
     ModelMapper modelMapper;
+
+    private ZoneId timeZoneActual = ZoneId.of("America/Caracas");
 
     @PostConstruct
     public void onCreate() {
@@ -52,9 +55,10 @@ public class InventoryDTOMapper {
         modelMapper.addMappings(mapInventoryDetailToInventoryDetailResponseDTO);
     }
 
-    Converter<OffsetDateTime, String> dateToStringConverter = context ->
-            (context.getSource() != null ? DateTimeFormatter.ofPattern(DATE_FORMATTER).format(context.getSource()) : "");
+    Converter<OffsetDateTime, String> dateToStringConverter = context -> (context.getSource() != null ?
+            DateTimeFormatter.ofPattern(DATE_FORMATTER).format(context.getSource().atZoneSameInstant(timeZoneActual)) : "");
+
 
     Converter<OffsetDateTime, String> timeToStringConverter = context ->
-            (context.getSource() != null ? DateTimeFormatter.ofPattern(TIME_FORMATTER).format(context.getSource()) : "");
+            (context.getSource() != null ? DateTimeFormatter.ofPattern(TIME_FORMATTER).format(context.getSource().atZoneSameInstant(timeZoneActual)) : "");
 }

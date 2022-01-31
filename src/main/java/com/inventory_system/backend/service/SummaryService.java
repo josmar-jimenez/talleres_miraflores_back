@@ -53,10 +53,10 @@ public class SummaryService {
         summaryResponseDTOList.add(new SummaryResponseDTO(inventoryList.size()+"","Descuadres diario", "inventory","bg-info"));
         /*Inventario con descuadre semanal*/
         inventoryList = inventoryService.findAllFromLastType(SummaryTimeType.DAY);
-        summaryResponseDTOList.add(new SummaryResponseDTO(inventoryList.size()+"","Descuadres semanal", "inventory","bg-danger"));
+        summaryResponseDTOList.add(new SummaryResponseDTO(inventoryList.size()+"","Descuadres semanal", "inventory","bg-dark"));
         /*Inventario con descuadre mensual*/
         inventoryList = inventoryService.findAllFromLastType(SummaryTimeType.DAY);
-        summaryResponseDTOList.add(new SummaryResponseDTO(inventoryList.size()+"","Descuadres mensuales", "inventory","bg-info"));
+        summaryResponseDTOList.add(new SummaryResponseDTO(inventoryList.size()+"","Descuadres mensuales", "inventory","bg-danger"));
         /*Productos bajo stock*/
         List<Stock>  stockList = stockService.findProductLowStock();
         summaryResponseDTOList.add(new SummaryResponseDTO(stockList.size()+"","Productos con mínimo almacen", "stock","bg-danger"));
