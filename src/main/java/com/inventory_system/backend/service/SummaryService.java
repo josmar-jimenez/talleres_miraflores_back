@@ -35,31 +35,31 @@ public class SummaryService {
         summaryResponseDTOList.add(new SummaryResponseDTO(saleList.size()+"","Ventas diarias", "sale","bg-success"));
         /*Productos vendidos diario*/
         summaryResponseDTOList.add(new SummaryResponseDTO(getTotalProducts(saleList)+"","Productos vendidos hoy",
-                "sale","bg-success"));
+                "sale","bg-dark"));
         /*Ventas semanales*/
         saleList = saleService.findAllFromLastType(SummaryTimeType.WEEK);
         summaryResponseDTOList.add(new SummaryResponseDTO(saleList.size()+"","Ventas semanales", "sale","bg-info"));
         /*Productos vendidos semanal*/
         summaryResponseDTOList.add(new SummaryResponseDTO(getTotalProducts(saleList)+"","Productos vendidos esta semana",
-                "sale","bg-success"));
+                "sale","bg-dark"));
         /*Ventas mensuales*/
         saleList = saleService.findAllFromLastType(SummaryTimeType.MONTH);
-        summaryResponseDTOList.add(new SummaryResponseDTO(saleList.size()+"","Ventas mensuales", "sale","bg-warning"));
+        summaryResponseDTOList.add(new SummaryResponseDTO(saleList.size()+"","Ventas mensuales", "sale","bg-success"));
         /*Productos vendidos mensual*/
         summaryResponseDTOList.add(new SummaryResponseDTO(getTotalProducts(saleList)+"","Productos vendidos este mes",
-                "sale","bg-success"));
+                "sale","bg-dark"));
         /*Inventario con descuadre diario*/
         inventoryList = inventoryService.findAllFromLastType(SummaryTimeType.DAY);
-        summaryResponseDTOList.add(new SummaryResponseDTO(inventoryList.size()+"","Descuadres diario", "inventory","bg-success"));
+        summaryResponseDTOList.add(new SummaryResponseDTO(inventoryList.size()+"","Descuadres diario", "inventory","bg-info"));
         /*Inventario con descuadre semanal*/
         inventoryList = inventoryService.findAllFromLastType(SummaryTimeType.DAY);
-        summaryResponseDTOList.add(new SummaryResponseDTO(inventoryList.size()+"","Descuadres semanal", "inventory","bg-info"));
+        summaryResponseDTOList.add(new SummaryResponseDTO(inventoryList.size()+"","Descuadres semanal", "inventory","bg-danger"));
         /*Inventario con descuadre mensual*/
         inventoryList = inventoryService.findAllFromLastType(SummaryTimeType.DAY);
-        summaryResponseDTOList.add(new SummaryResponseDTO(inventoryList.size()+"","Descuadres mensuales", "inventory","bg-warning"));
+        summaryResponseDTOList.add(new SummaryResponseDTO(inventoryList.size()+"","Descuadres mensuales", "inventory","bg-info"));
         /*Productos bajo stock*/
         List<Stock>  stockList = stockService.findProductLowStock();
-        summaryResponseDTOList.add(new SummaryResponseDTO(stockList.size()+"","Productos con mínimo almacen", "stock","bg-warning"));
+        summaryResponseDTOList.add(new SummaryResponseDTO(stockList.size()+"","Productos con mínimo almacen", "stock","bg-danger"));
 
         return summaryResponseDTOList;
     }
