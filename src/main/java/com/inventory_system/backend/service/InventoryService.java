@@ -67,7 +67,7 @@ public class InventoryService {
         }else if(SummaryTimeType.WEEK.equals(type)){
             fromDate = fromDate.minusDays(fromDate.getDayOfWeek().getValue()-1).truncatedTo(ChronoUnit.DAYS);
         }if(SummaryTimeType.MONTH.equals(type)){
-            fromDate = fromDate.minusDays(fromDate.getDayOfMonth()).truncatedTo(ChronoUnit.DAYS);
+            fromDate = fromDate.minusDays(fromDate.getDayOfMonth()-1).truncatedTo(ChronoUnit.DAYS);
         }
         if (userLogged.getRole().getId()==1) {
             return inventoryRepository.findByHasMismatchAndCreatedGreaterThan(true,fromDate);
