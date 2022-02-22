@@ -43,7 +43,7 @@ public class TagService {
     public Tag create(TagRequestDTO tagRequestDTO) throws BusinessException {
         Tag tagExist = findByName(tagRequestDTO.getName());
         if (Objects.isNull(tagExist)) {
-            Tag tag = new Tag(null, tagRequestDTO.getName());
+            Tag tag = new Tag(null, null,tagRequestDTO.getName(),null);
             return tagRepository.save(tag);
         } else {
             throw new BusinessException(RECORD_EXIST_CODE, RECORD_EXIST + "name");

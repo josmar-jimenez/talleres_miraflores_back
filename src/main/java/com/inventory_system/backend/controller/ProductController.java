@@ -1,5 +1,6 @@
 package com.inventory_system.backend.controller;
 
+import com.inventory_system.backend.dto.request.product.ProductFilterRequestDTO;
 import com.inventory_system.backend.dto.request.product.ProductRequestDTO;
 import com.inventory_system.backend.dto.response.StandardResponse;
 import com.inventory_system.backend.dto.response.product.ProductResponseDTO;
@@ -66,6 +67,15 @@ public class ProductController {
     public StandardResponse getProducts(Pageable pageable) throws Exception {
         roleOperativeActionService.checkRoleOperativeAndAction(OPERATIVE, Action.QUERY.ordinal());
         Page<ProductResponseDTO> page = productService.findAll(pageable).map(product ->
+                modelMapper.map(product, ProductResponseDTO.class));
+        return StandardResponse.createResponse(page,
+                tokenService.getJWTToken(tokenService.getUserNick()));
+    }
+
+    @PostMapping("/filtered")
+    public StandardResponse getProductsFiltered(Pageable pageable, @RequestBody ProductFilterRequestDTO productFilterRequestDTO) throws Exception {
+        roleOperativeActionService.checkRoleOperativeAndAction(OPERATIVE, Action.QUERY.ordinal());
+        Page<ProductResponseDTO> page = productService.findAllFiltered(pageable,productFilterRequestDTO).map(product ->
                 modelMapper.map(product, ProductResponseDTO.class));
         return StandardResponse.createResponse(page,
                 tokenService.getJWTToken(tokenService.getUserNick()));

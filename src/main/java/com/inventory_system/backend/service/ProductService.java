@@ -1,5 +1,6 @@
 package com.inventory_system.backend.service;
 
+import com.inventory_system.backend.dto.request.product.ProductFilterRequestDTO;
 import com.inventory_system.backend.dto.request.product.ProductRequestDTO;
 import com.inventory_system.backend.dto.response.product.ProductResponseDTO;
 import com.inventory_system.backend.exception.BusinessException;
@@ -12,10 +13,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import static com.inventory_system.backend.util.InventorySystemConstant.*;
 
@@ -39,32 +40,50 @@ public class ProductService {
     }
 
     public Page<Product> findAll(Pageable pageable) {
-        if(pageable.getSort().isEmpty()) {
+        if (pageable.getSort().isEmpty()) {
             Sort sortDefault = Sort.by("id").descending();
             pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sortDefault);
         }
         return productRepository.findAll(pageable);
     }
 
+    public Page<Product> findAllFiltered(Pageable pageable, ProductFilterRequestDTO productFilterRequestDTO) {
+        if (pageable.getSort().isEmpty()) {
+            Sort sortDefault = Sort.by("id").descending();
+            pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sortDefault);
+        }
+
+        if (ObjectUtils.isEmpty(productFilterRequestDTO.getName()) && ObjectUtils.isEmpty(productFilterRequestDTO.getCode())) {
+            return findAll(pageable);
+        } else if (ObjectUtils.isEmpty(productFilterRequestDTO.getName()) || ObjectUtils.isEmpty(productFilterRequestDTO.getCode())) {
+            return productRepository.findByNameContainingIgnoreCaseOrCodeContainingIgnoreCase(pageable,
+                    ObjectUtils.isEmpty(productFilterRequestDTO.getName()) ? "ÑÑÑ" : productFilterRequestDTO.getName(),
+                    ObjectUtils.isEmpty(productFilterRequestDTO.getCode()) ? "ÑÑÑ" : productFilterRequestDTO.getCode());
+        } else {
+            return productRepository.findByNameContainingIgnoreCaseAndCodeContainingIgnoreCase(pageable,
+                    productFilterRequestDTO.getName(), productFilterRequestDTO.getCode());
+        }
+    }
+
     public List<ProductResponseDTO> findAllExisting(String input) {
         List<Integer> productsIdList = new ArrayList<>();
         List<ProductResponseDTO> productResponseDTOList = elasticSearchService.getSuggestion(input, null);
         productResponseDTOList.forEach(productResponseDTO -> productsIdList.add(productResponseDTO.getId()));
-        List<ProductResponseDTO> productResponseDTOList2 =new ArrayList<>();
+        List<ProductResponseDTO> productResponseDTOList2 = new ArrayList<>();
         productRepository.findAllActiveById(productsIdList).forEach(product ->
                 productResponseDTOList2.add(modelMapper.map(product, ProductResponseDTO.class)));
         return productResponseDTOList2;
     }
 
     public Product create(ProductRequestDTO productRequestDTO) throws BusinessException {
-        Product product = productRepository.findByShortNameOrBarcode(productRequestDTO.getShortName(), productRequestDTO.getBarcode()).orElse(null);
-
-        if (Objects.isNull(product)) {
+        boolean exist = productRepository.findByCodeOrName(productRequestDTO.getShortName(), productRequestDTO.getBarcode()).size() == 0;
+        Product product;
+        if (exist) {
             product = modelMapper.map(productRequestDTO, Product.class);
             product.setStatus(statusService.findById(productRequestDTO.getStatusId()));
             product = productRepository.save(product);
         } else {
-            throw new BusinessException(RECORD_EXIST_CODE, RECORD_EXIST + "shortName, barcode");
+            throw new BusinessException(RECORD_EXIST_CODE, RECORD_EXIST + "code, name");
         }
         return product;
     }

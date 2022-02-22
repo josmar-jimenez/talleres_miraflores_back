@@ -22,14 +22,22 @@ public class Product {
     @Column
     private String shortName;
     @Column
+    private String code;
+    @Column
+    private String color;
+    @Column
+    private String manufacturer;
+    @Column
     private String barcode;
     @Column
     private BigDecimal price;
     @Column
     private BigDecimal cost;
+    @Column
+    private BigDecimal tax;
     /*Relations*/
     @ManyToOne(fetch = FetchType.EAGER)
     private Status status;
     @OneToMany(fetch = FetchType.EAGER)
-    private List<ProductTag> tag;
+    private List<Tag> tag;
 }

@@ -10,13 +10,13 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class ProductTag {
-
+public class TagType {
     @Id
     @Column
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Product product;
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Tag tag;
+    @Column
+    private String name;
+    @Column
+    private Integer fatherId;
 }

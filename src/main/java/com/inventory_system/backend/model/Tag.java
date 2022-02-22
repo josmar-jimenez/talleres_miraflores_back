@@ -16,5 +16,10 @@ public class Tag {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @Column
+    private Integer fatherId;
+    @Column
     private String name;
+    /*Relations*/
+    @ManyToOne(fetch = FetchType.EAGER)
+    private TagType type;
 }

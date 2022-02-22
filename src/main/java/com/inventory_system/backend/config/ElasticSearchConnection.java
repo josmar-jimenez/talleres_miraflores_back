@@ -157,7 +157,7 @@ public class ElasticSearchConnection {
 
         List<String> contextTags = new ArrayList<>();
         if (!CollectionUtils.isEmpty(product.getTag()))
-            product.getTag().forEach(productTag -> contextTags.add("\"" + productTag.getTag().getName() + "\""));
+            product.getTag().forEach(tag -> contextTags.add("\"" + tag.getName() + "\""));
         contextTags.add("\"all\"");
 
         String productNameCleaned = StringUtils.stripAccents(product.getName().toLowerCase());
