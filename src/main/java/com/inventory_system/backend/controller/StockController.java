@@ -1,7 +1,10 @@
 package com.inventory_system.backend.controller;
 
+import com.inventory_system.backend.dto.request.product.ProductFilterRequestDTO;
+import com.inventory_system.backend.dto.request.stock.StockFilterRequestDTO;
 import com.inventory_system.backend.dto.request.stock.StockRequestDTO;
 import com.inventory_system.backend.dto.response.StandardResponse;
+import com.inventory_system.backend.dto.response.product.ProductResponseDTO;
 import com.inventory_system.backend.dto.response.stock.StockResponseDTO;
 import com.inventory_system.backend.enums.Action;
 import com.inventory_system.backend.enums.Allowed;
@@ -71,6 +74,15 @@ public class StockController {
                 tokenService.getJWTToken(tokenService.getUserNick()));
     }
 
+    @PostMapping("/filtered")
+    public StandardResponse getProductsFiltered(Pageable pageable, @RequestBody StockFilterRequestDTO stockFilterRequestDTO) throws Exception {
+        roleOperativeActionService.checkRoleOperativeAndAction(OPERATIVE, Action.QUERY.ordinal());
+        Page<StockResponseDTO> page = stockService.findAllFiltered(pageable,stockFilterRequestDTO).map(stock ->
+                modelMapper.map(stock, StockResponseDTO.class));
+        return StandardResponse.createResponse(page,
+                tokenService.getJWTToken(tokenService.getUserNick()));
+    }
+
     @DeleteMapping("/{id}")
     public StandardResponse deleteStock(@PathVariable(value = "id") Integer id) throws Exception {
         Allowed allowed = roleOperativeActionService.checkRoleOperativeAndAction(OPERATIVE, Action.UPDATE.ordinal());
@@ -78,4 +90,12 @@ public class StockController {
         return StandardResponse.createResponse(response,
                 tokenService.getJWTToken(tokenService.getUserNick()));
     }
+
+    //Carga masiva de stock fake
+/*    @GetMapping("/stockFake")
+    public StandardResponse createStockFake() throws Exception {
+        boolean response = stockService.createFake();
+        return StandardResponse.createResponse(response,
+                tokenService.getJWTToken(tokenService.getUserNick()));
+    }*/
 }

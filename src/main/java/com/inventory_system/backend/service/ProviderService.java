@@ -8,6 +8,7 @@ import com.inventory_system.backend.repository.ProviderRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +32,7 @@ public class ProviderService {
     }
 
     public Page<Provider> findAll(Pageable pageable) {
+        pageable = PageRequest.of(pageable.getPageNumber(), 1000, pageable.getSort());
         return providerRepository.findAll(pageable);
     }
 

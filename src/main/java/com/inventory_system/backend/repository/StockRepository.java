@@ -27,4 +27,13 @@ public interface StockRepository extends JpaRepository<Stock, Integer> {
     List<Stock> findByStockLessThan(Long minimumStock);
 
     List<Stock> findByStoreAndStockLessThan(Store store, Long minimumStock);
+
+    @Query("SELECT s FROM Stock s WHERE " +
+            "LOWER(s.product.name) LIKE %?1% OR " +
+            "LOWER(s.store.name) LIKE %?2% ")
+    Page<Stock> findByNameContainingIgnoreCaseOrCodeContainingIgnoreCase(String productName, String storeName,Pageable pageable);
+
+    @Query("SELECT s FROM Stock s WHERE " +
+            " LOWER(s.product.name) LIKE %?1% AND LOWER(s.store.name) LIKE %?2% ")
+    Page<Stock> findByNameContainingIgnoreCaseAndCodeContainingIgnoreCase(String productName, String storeName,Pageable pageable);
 }

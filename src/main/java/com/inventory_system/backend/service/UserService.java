@@ -61,6 +61,8 @@ public class UserService {
             Sort sortDefault = Sort.by("id").descending();
             pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sortDefault);
         }
+        pageable = PageRequest.of(pageable.getPageNumber(), 1000, pageable.getSort());
+
         if (Allowed.ALL.equals(allowed)) {
             return userRepository.findAll(pageable);
         } else {

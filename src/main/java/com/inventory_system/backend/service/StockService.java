@@ -1,11 +1,14 @@
 package com.inventory_system.backend.service;
 
+import com.inventory_system.backend.dto.request.product.ProductFilterRequestDTO;
+import com.inventory_system.backend.dto.request.stock.StockFilterRequestDTO;
 import com.inventory_system.backend.dto.request.stock.StockRequestDTO;
 import com.inventory_system.backend.enums.Allowed;
 import com.inventory_system.backend.enums.MovementType;
 import com.inventory_system.backend.exception.BusinessException;
 import com.inventory_system.backend.exception.UnauthorizedException;
 import com.inventory_system.backend.model.*;
+import com.inventory_system.backend.repository.ProductRepository;
 import com.inventory_system.backend.repository.StockRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -13,6 +16,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -64,7 +68,7 @@ public class StockService {
     }
 
     public Page<Stock> findAll(Pageable pageable, Allowed allowed) throws UnauthorizedException {
-        if(pageable.getSort().isEmpty()) {
+        if (pageable.getSort().isEmpty()) {
             Sort sortDefault = Sort.by("id").descending();
             pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sortDefault);
         }
@@ -77,13 +81,31 @@ public class StockService {
         }*/
     }
 
+    public Page<Stock> findAllFiltered(Pageable pageable, StockFilterRequestDTO stockFilterRequestDTO) throws UnauthorizedException {
+        if (pageable.getSort().isEmpty()) {
+            Sort sortDefault = Sort.by("id").descending();
+            pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sortDefault);
+        }
+
+        if (ObjectUtils.isEmpty(stockFilterRequestDTO.getProductName()) && ObjectUtils.isEmpty(stockFilterRequestDTO.getStoreName())) {
+            return findAll(pageable,null);
+        } else if (ObjectUtils.isEmpty(stockFilterRequestDTO.getProductName()) || ObjectUtils.isEmpty(stockFilterRequestDTO.getStoreName())) {
+            return stockRepository.findByNameContainingIgnoreCaseOrCodeContainingIgnoreCase(
+                    ObjectUtils.isEmpty(stockFilterRequestDTO.getProductName()) ? "ÑÑÑ" : stockFilterRequestDTO.getProductName().toLowerCase(),
+                    ObjectUtils.isEmpty(stockFilterRequestDTO.getStoreName()) ? "ÑÑÑ" : stockFilterRequestDTO.getStoreName().toLowerCase(), pageable);
+        } else {
+            return stockRepository.findByNameContainingIgnoreCaseAndCodeContainingIgnoreCase(
+                    stockFilterRequestDTO.getProductName().toLowerCase(), stockFilterRequestDTO.getStoreName().toLowerCase(), pageable);
+        }
+    }
+
     public List<Stock> findProductLowStock() throws UnauthorizedException {
 
         User userLogged = userService.findByNick(tokenService.getUserNick());
-        if (userLogged.getRole().getId()==1) {
+        if (userLogged.getRole().getId() == 1) {
             return stockRepository.findByStockLessThan(10l);
-        } else  {
-            return stockRepository.findByStoreAndStockLessThan(userLogged.getStore(),10l);
+        } else {
+            return stockRepository.findByStoreAndStockLessThan(userLogged.getStore(), 10l);
         }
     }
 
@@ -105,10 +127,10 @@ public class StockService {
                         stockRequestDTO.getStock(), userLogged, product, store, null);
                 stockMovementService.create(stockMovement);
 
-                if (stock.getStock() > 0 && stock.getStatus().getId()==1&&
-                        stock.getStore().getStatus().getId()==1
-                        && stock.getProduct().getStatus().getId()==1)
-                        elasticSearchService.insertUpdateDocument(stock.getProduct());
+                if (stock.getStock() > 0 && stock.getStatus().getId() == 1 &&
+                        stock.getStore().getStatus().getId() == 1
+                        && stock.getProduct().getStatus().getId() == 1)
+                    elasticSearchService.insertUpdateDocument(stock.getProduct());
                 return stockRepository.save(stock);
             } else {
                 throw new BusinessException(OPERATION_NOT_ALLOWED_CODE, OPERATION_NOT_ALLOWED);
@@ -135,7 +157,7 @@ public class StockService {
                 /*Status agotado*/
                 stock.setStatus(statusService.findById(5));
                 stock = stockRepository.save(stock);
-                if (findByProductId(stock.getProduct().getId()).size() ==0) {
+                if (findByProductId(stock.getProduct().getId()).size() == 0) {
                     elasticSearchService.deleteDocument(stock.getProduct());
                 }
             } else {
@@ -143,10 +165,9 @@ public class StockService {
                 stock.setStatus(status);
                 stock = stockRepository.save(stock);
 
-                if (findByProductId(stock.getProduct().getId()).size() ==0) {
+                if (findByProductId(stock.getProduct().getId()).size() == 0) {
                     elasticSearchService.deleteDocument(stock.getProduct());
-                }
-                else {
+                } else {
                     elasticSearchService.insertUpdateDocument(stock.getProduct());
                 }
             }
@@ -183,7 +204,7 @@ public class StockService {
             stockRepository.save(stockExists);
             if (findByProductId(stockExists.getProduct().getId()).size() == 0) {
                 elasticSearchService.deleteDocument(stockExists.getProduct());
-            }else{
+            } else {
                 elasticSearchService.insertUpdateDocument(stockExists.getProduct());
             }
         } else {
@@ -192,5 +213,32 @@ public class StockService {
                         INVALID_SALE_REQUEST_INSUFFICIENT_STOCK);
             stockRepository.save(stockExists);
         }
+    }
+
+    //BORRAR CREAR INVENTARIO FAKE
+    @Autowired
+    private ProductRepository productRepository;
+
+    @Transactional
+    public boolean createFake() throws BusinessException, UnauthorizedException {
+
+        List<Product> product = productRepository.findAll();
+        Status status = statusService.findById(1);
+        Store store = storeService.findById(1);
+
+        int i = 0;
+        for (; i < product.size(); i++) {
+            if (i == 100)
+                break;
+            try {
+                Stock stock = new Stock(null, 1l, status, product.get(i), store);
+               elasticSearchService.insertUpdateDocument(stock.getProduct());
+                //stockRepository.save(stock);
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+        return true;
     }
 }

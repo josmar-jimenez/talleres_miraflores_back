@@ -260,7 +260,7 @@ public class ElasticSearchConnection {
         } catch (IOException ex) {
             log.error("Error in autocomplete search", ex);
             closeClient();
-            return null;
+            return new ArrayList<>();
         }
     }
 
