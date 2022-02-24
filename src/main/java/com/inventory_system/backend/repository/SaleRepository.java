@@ -6,11 +6,11 @@ import com.inventory_system.backend.model.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.time.OffsetDateTime;
 import java.util.List;
-
 
 @Repository
 public interface SaleRepository extends JpaRepository<Sale, Integer> {
@@ -24,4 +24,13 @@ public interface SaleRepository extends JpaRepository<Sale, Integer> {
     List<Sale>findByStoreAndCreatedGreaterThan(Store store, OffsetDateTime created);
 
     List<Sale>findByUserAndCreatedGreaterThan(User user, OffsetDateTime created);
+
+    @Query("SELECT s FROM Sale s WHERE " +
+            "LOWER(s.user.name) LIKE %?1% OR " +
+            "LOWER(s.store.name) LIKE %?2% ")
+    Page<Sale> findByUserNameContainingIgnoreCaseOrStoreNameContainingIgnoreCase(String userName, String storeName, Pageable pageable);
+
+    @Query("SELECT s FROM Sale s WHERE " +
+            " LOWER(s.user.name) LIKE %?1% AND LOWER(s.store.name) LIKE %?2% ")
+    Page<Sale> findByUserNameContainingIgnoreCaseAndStoreContainingIgnoreCase(String userName, String storeName, Pageable pageable);
 }

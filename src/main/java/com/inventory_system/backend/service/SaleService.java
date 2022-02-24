@@ -1,6 +1,7 @@
 package com.inventory_system.backend.service;
 
 import com.inventory_system.backend.dto.common.SaleDetailDTO;
+import com.inventory_system.backend.dto.request.sale.SaleFilterRequestDTO;
 import com.inventory_system.backend.dto.request.sale.SaleRequestDTO;
 import com.inventory_system.backend.enums.Allowed;
 import com.inventory_system.backend.enums.MovementType;
@@ -18,6 +19,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.ObjectUtils;
 
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
@@ -95,6 +97,24 @@ public class SaleService {
         } else {
             User userLogged = userService.findByNick(tokenService.getUserNick());
             return saleRepository.findByStore(userLogged.getStore(), pageable);
+        }
+    }
+
+    public Page<Sale> findAllFiltered(Pageable pageable, SaleFilterRequestDTO saleFilterRequestDTO) throws UnauthorizedException {
+        if (pageable.getSort().isEmpty()) {
+            Sort sortDefault = Sort.by("id").descending();
+            pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sortDefault);
+        }
+
+        if (ObjectUtils.isEmpty(saleFilterRequestDTO.getUserName()) && ObjectUtils.isEmpty(saleFilterRequestDTO.getStoreName())) {
+            return findAll(pageable,null);
+        } else if (ObjectUtils.isEmpty(saleFilterRequestDTO.getUserName()) || ObjectUtils.isEmpty(saleFilterRequestDTO.getStoreName())) {
+            return saleRepository.findByUserNameContainingIgnoreCaseOrStoreNameContainingIgnoreCase(
+                    ObjectUtils.isEmpty(saleFilterRequestDTO.getUserName()) ? "ÑÑÑ" : saleFilterRequestDTO.getUserName().toLowerCase(),
+                    ObjectUtils.isEmpty(saleFilterRequestDTO.getStoreName()) ? "ÑÑÑ" : saleFilterRequestDTO.getStoreName().toLowerCase(), pageable);
+        } else {
+            return saleRepository.findByUserNameContainingIgnoreCaseAndStoreContainingIgnoreCase(
+                    saleFilterRequestDTO.getUserName().toLowerCase(), saleFilterRequestDTO.getStoreName().toLowerCase(), pageable);
         }
     }
 

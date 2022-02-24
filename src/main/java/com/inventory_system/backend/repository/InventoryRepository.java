@@ -6,6 +6,7 @@ import com.inventory_system.backend.model.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.time.OffsetDateTime;
@@ -23,4 +24,8 @@ public interface InventoryRepository extends JpaRepository<Inventory, Integer> {
     List<Inventory>findByHasMismatchAndStoreAndCreatedGreaterThan(boolean hasMismatch,Store store, OffsetDateTime created);
 
     List<Inventory>findByHasMismatchAndUserAndCreatedGreaterThan(boolean hasMismatch,User user, OffsetDateTime created);
+
+    @Query("SELECT i FROM Inventory i WHERE " +
+            "LOWER(i.store.name) LIKE %?1%")
+    Page<Inventory> findByStoreNameContainingIgnoreCase(String storeName, Pageable pageable);
 }

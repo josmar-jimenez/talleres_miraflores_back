@@ -1,6 +1,5 @@
 package com.inventory_system.backend.service;
 
-import com.inventory_system.backend.dto.request.product.ProductFilterRequestDTO;
 import com.inventory_system.backend.dto.request.stock.StockFilterRequestDTO;
 import com.inventory_system.backend.dto.request.stock.StockRequestDTO;
 import com.inventory_system.backend.enums.Allowed;
@@ -90,11 +89,11 @@ public class StockService {
         if (ObjectUtils.isEmpty(stockFilterRequestDTO.getProductName()) && ObjectUtils.isEmpty(stockFilterRequestDTO.getStoreName())) {
             return findAll(pageable,null);
         } else if (ObjectUtils.isEmpty(stockFilterRequestDTO.getProductName()) || ObjectUtils.isEmpty(stockFilterRequestDTO.getStoreName())) {
-            return stockRepository.findByNameContainingIgnoreCaseOrCodeContainingIgnoreCase(
+            return stockRepository.findByProductNameContainingIgnoreCaseOrStoreNameContainingIgnoreCase(
                     ObjectUtils.isEmpty(stockFilterRequestDTO.getProductName()) ? "ÑÑÑ" : stockFilterRequestDTO.getProductName().toLowerCase(),
                     ObjectUtils.isEmpty(stockFilterRequestDTO.getStoreName()) ? "ÑÑÑ" : stockFilterRequestDTO.getStoreName().toLowerCase(), pageable);
         } else {
-            return stockRepository.findByNameContainingIgnoreCaseAndCodeContainingIgnoreCase(
+            return stockRepository.findByProductNameContainingIgnoreCaseAndStoreNameContainingIgnoreCase(
                     stockFilterRequestDTO.getProductName().toLowerCase(), stockFilterRequestDTO.getStoreName().toLowerCase(), pageable);
         }
     }
@@ -228,7 +227,7 @@ public class StockService {
 
         int i = 0;
         for (; i < product.size(); i++) {
-            if (i == 100)
+            if (i == 500)
                 break;
             try {
                 Stock stock = new Stock(null, 1l, status, product.get(i), store);

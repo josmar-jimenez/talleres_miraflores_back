@@ -1,8 +1,11 @@
 package com.inventory_system.backend.controller;
 
+import com.inventory_system.backend.dto.request.sale.SaleFilterRequestDTO;
 import com.inventory_system.backend.dto.request.sale.SaleRequestDTO;
+import com.inventory_system.backend.dto.request.stock.StockFilterRequestDTO;
 import com.inventory_system.backend.dto.response.StandardResponse;
 import com.inventory_system.backend.dto.response.sale.SaleResponseDTO;
+import com.inventory_system.backend.dto.response.stock.StockResponseDTO;
 import com.inventory_system.backend.enums.Action;
 import com.inventory_system.backend.enums.Allowed;
 import com.inventory_system.backend.model.Sale;
@@ -57,6 +60,15 @@ public class SaleController {
         Allowed allowed = roleOperativeActionService.checkRoleOperativeAndAction(OPERATIVE, Action.QUERY.ordinal());
         Page<SaleResponseDTO> page = saleService.findAll(pageable, allowed).map(store ->
                 modelMapper.map(store, SaleResponseDTO.class));
+        return StandardResponse.createResponse(page,
+                tokenService.getJWTToken(tokenService.getUserNick()));
+    }
+
+    @PostMapping("/filtered")
+    public StandardResponse getSalesFiltered(Pageable pageable, @RequestBody SaleFilterRequestDTO saleFilterRequestDTO) throws Exception {
+        roleOperativeActionService.checkRoleOperativeAndAction(OPERATIVE, Action.QUERY.ordinal());
+        Page<SaleResponseDTO> page = saleService.findAllFiltered(pageable,saleFilterRequestDTO).map(stock ->
+                modelMapper.map(stock, SaleResponseDTO.class));
         return StandardResponse.createResponse(page,
                 tokenService.getJWTToken(tokenService.getUserNick()));
     }

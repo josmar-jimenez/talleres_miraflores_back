@@ -19,8 +19,6 @@ public interface StockRepository extends JpaRepository<Stock, Integer> {
     @Query("SELECT s FROM Stock s WHERE s.product.id=?1 AND s.store.id=?2")
     Optional<Stock> findByProductIdAndStoreId(int productId, int storeId);
 
-    Page<Stock> findByStore(Store store, Pageable pageable);
-
     @Query("SELECT s FROM Stock s WHERE s.product.id=?1 AND s.product.status.id=1 and s.store.status.id=1 and s.status.id=1")
     List<Stock> findByProductId(int productId);
 
@@ -31,9 +29,9 @@ public interface StockRepository extends JpaRepository<Stock, Integer> {
     @Query("SELECT s FROM Stock s WHERE " +
             "LOWER(s.product.name) LIKE %?1% OR " +
             "LOWER(s.store.name) LIKE %?2% ")
-    Page<Stock> findByNameContainingIgnoreCaseOrCodeContainingIgnoreCase(String productName, String storeName,Pageable pageable);
+    Page<Stock> findByProductNameContainingIgnoreCaseOrStoreNameContainingIgnoreCase(String productName, String storeName, Pageable pageable);
 
     @Query("SELECT s FROM Stock s WHERE " +
             " LOWER(s.product.name) LIKE %?1% AND LOWER(s.store.name) LIKE %?2% ")
-    Page<Stock> findByNameContainingIgnoreCaseAndCodeContainingIgnoreCase(String productName, String storeName,Pageable pageable);
+    Page<Stock> findByProductNameContainingIgnoreCaseAndStoreNameContainingIgnoreCase(String productName, String storeName, Pageable pageable);
 }

@@ -118,6 +118,7 @@ public class ElasticSearchConnection {
                         "    \"product\": {\n" +
                         "      \"type\": \"completion\",\n" +
                         "       \"analyzer\": \"autocomplete\"," +
+                        "       \"max_input_length\": 200," +
                         "       \"contexts\": [\n" +
                         "           {\n" +
                         "           \"name\":\"tags\",\n" +
