@@ -93,14 +93,14 @@ public class InventoryService {
         }
     }
 
-    public Page<Inventory> findAllFiltered(Pageable pageable, InventoryFilterRequestDTO inventoryFilterRequestDTO) throws UnauthorizedException {
+    public Page<Inventory> findAllFiltered(Pageable pageable, InventoryFilterRequestDTO inventoryFilterRequestDTO, Allowed allowed) throws UnauthorizedException {
         if (pageable.getSort().isEmpty()) {
             Sort sortDefault = Sort.by("id").descending();
             pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sortDefault);
         }
 
         if (ObjectUtils.isEmpty(inventoryFilterRequestDTO.getStoreName())) {
-            return findAll(pageable,null);
+            return findAll(pageable,allowed);
         } else
             return inventoryRepository.findByStoreNameContainingIgnoreCase(
                     inventoryFilterRequestDTO.getStoreName().toLowerCase(), pageable);

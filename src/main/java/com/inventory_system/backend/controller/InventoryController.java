@@ -66,7 +66,8 @@ public class InventoryController {
     @PostMapping("/filtered")
     public StandardResponse getInventoriesFiltered(Pageable pageable, @RequestBody InventoryFilterRequestDTO inventoryFilterRequestDTO) throws Exception {
         roleOperativeActionService.checkRoleOperativeAndAction(OPERATIVE, Action.QUERY.ordinal());
-        Page<InventoryResponseDTO> page = inventoryService.findAllFiltered(pageable,inventoryFilterRequestDTO).map(inventory ->
+        Allowed allowed = roleOperativeActionService.checkRoleOperativeAndAction(OPERATIVE, Action.QUERY.ordinal());
+        Page<InventoryResponseDTO> page = inventoryService.findAllFiltered(pageable,inventoryFilterRequestDTO,allowed).map(inventory ->
                 modelMapper.map(inventory, InventoryResponseDTO.class));
         return StandardResponse.createResponse(page,
                 tokenService.getJWTToken(tokenService.getUserNick()));
