@@ -100,14 +100,14 @@ public class SaleService {
         }
     }
 
-    public Page<Sale> findAllFiltered(Pageable pageable, SaleFilterRequestDTO saleFilterRequestDTO) throws UnauthorizedException {
+    public Page<Sale> findAllFiltered(Pageable pageable, SaleFilterRequestDTO saleFilterRequestDTO, Allowed allowed) throws UnauthorizedException {
         if (pageable.getSort().isEmpty()) {
             Sort sortDefault = Sort.by("id").descending();
             pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sortDefault);
         }
 
         if (ObjectUtils.isEmpty(saleFilterRequestDTO.getUserName()) && ObjectUtils.isEmpty(saleFilterRequestDTO.getStoreName())) {
-            return findAll(pageable,null);
+            return findAll(pageable,allowed);
         } else if (ObjectUtils.isEmpty(saleFilterRequestDTO.getUserName()) || ObjectUtils.isEmpty(saleFilterRequestDTO.getStoreName())) {
             return saleRepository.findByUserNameContainingIgnoreCaseOrStoreNameContainingIgnoreCase(
                     ObjectUtils.isEmpty(saleFilterRequestDTO.getUserName()) ? "ÑÑÑ" : saleFilterRequestDTO.getUserName().toLowerCase(),

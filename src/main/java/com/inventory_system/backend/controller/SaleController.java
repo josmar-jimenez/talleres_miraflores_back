@@ -66,8 +66,9 @@ public class SaleController {
 
     @PostMapping("/filtered")
     public StandardResponse getSalesFiltered(Pageable pageable, @RequestBody SaleFilterRequestDTO saleFilterRequestDTO) throws Exception {
+        Allowed allowed = roleOperativeActionService.checkRoleOperativeAndAction(OPERATIVE, Action.QUERY.ordinal());
         roleOperativeActionService.checkRoleOperativeAndAction(OPERATIVE, Action.QUERY.ordinal());
-        Page<SaleResponseDTO> page = saleService.findAllFiltered(pageable,saleFilterRequestDTO).map(stock ->
+        Page<SaleResponseDTO> page = saleService.findAllFiltered(pageable,saleFilterRequestDTO,allowed).map(stock ->
                 modelMapper.map(stock, SaleResponseDTO.class));
         return StandardResponse.createResponse(page,
                 tokenService.getJWTToken(tokenService.getUserNick()));
