@@ -1,10 +1,8 @@
 package com.inventory_system.backend.controller;
 
-import com.inventory_system.backend.dto.request.product.ProductFilterRequestDTO;
 import com.inventory_system.backend.dto.request.stock.StockFilterRequestDTO;
 import com.inventory_system.backend.dto.request.stock.StockRequestDTO;
 import com.inventory_system.backend.dto.response.StandardResponse;
-import com.inventory_system.backend.dto.response.product.ProductResponseDTO;
 import com.inventory_system.backend.dto.response.stock.StockResponseDTO;
 import com.inventory_system.backend.enums.Action;
 import com.inventory_system.backend.enums.Allowed;
@@ -75,7 +73,7 @@ public class StockController {
     }
 
     @PostMapping("/filtered")
-    public StandardResponse getProductsFiltered(Pageable pageable, @RequestBody StockFilterRequestDTO stockFilterRequestDTO) throws Exception {
+    public StandardResponse getStocksFiltered(Pageable pageable, @RequestBody StockFilterRequestDTO stockFilterRequestDTO) throws Exception {
         roleOperativeActionService.checkRoleOperativeAndAction(OPERATIVE, Action.QUERY.ordinal());
         Page<StockResponseDTO> page = stockService.findAllFiltered(pageable,stockFilterRequestDTO).map(stock ->
                 modelMapper.map(stock, StockResponseDTO.class));

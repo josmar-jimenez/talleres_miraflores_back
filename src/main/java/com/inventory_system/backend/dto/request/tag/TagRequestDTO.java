@@ -19,4 +19,8 @@ public class TagRequestDTO {
     @NotEmpty
     @Pattern(regexp = "^[a-zA-Z0-9_-]*$")
     private String name;
+
+    private Integer fatherId;
+    @NotNull
+    private Integer typeId;
 }

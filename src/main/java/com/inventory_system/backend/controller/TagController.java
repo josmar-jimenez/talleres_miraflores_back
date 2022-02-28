@@ -1,10 +1,10 @@
 package com.inventory_system.backend.controller;
 
+import com.inventory_system.backend.dto.request.tag.TagFilterRequestDTO;
 import com.inventory_system.backend.dto.request.tag.TagRequestDTO;
 import com.inventory_system.backend.dto.response.StandardResponse;
 import com.inventory_system.backend.dto.response.tag.TagResponseDTO;
 import com.inventory_system.backend.enums.Action;
-import com.inventory_system.backend.model.Tag;
 import com.inventory_system.backend.service.RoleOperativeActionService;
 import com.inventory_system.backend.service.TagService;
 import com.inventory_system.backend.service.TokenService;
@@ -35,19 +35,21 @@ public class TagController {
     @GetMapping("/{id}")
     public StandardResponse getTag(@PathVariable(value = "id") Integer id) throws Exception {
         roleOperativeActionService.checkRoleOperativeAndAction(OPERATIVE, Action.QUERY.ordinal());
-        Tag tag = tagService.findById(id);
-        TagResponseDTO tagResponseDTO = modelMapper.map(tag, TagResponseDTO.class);
-        return StandardResponse.createResponse(tagResponseDTO,
+        return StandardResponse.createResponse(tagService.findByIdDto(id),
                 tokenService.getJWTToken(tokenService.getUserNick()));
+    }
 
+    @PostMapping("/filtered")
+    public StandardResponse getTagsFiltered(Pageable pageable, @RequestBody TagFilterRequestDTO tagFilterRequestDTO) throws Exception {
+        roleOperativeActionService.checkRoleOperativeAndAction(OPERATIVE, Action.QUERY.ordinal());
+        return StandardResponse.createResponse(tagService.findAllFiltered(pageable,tagFilterRequestDTO),
+                tokenService.getJWTToken(tokenService.getUserNick()));
     }
 
     @PostMapping
     public StandardResponse createTag(@RequestBody @Valid TagRequestDTO tagRequestDTO) throws Exception {
         roleOperativeActionService.checkRoleOperativeAndAction(OPERATIVE, Action.CREATE.ordinal());
-        Tag tag = tagService.create(tagRequestDTO);
-        TagResponseDTO tagResponseDTO = modelMapper.map(tag, TagResponseDTO.class);
-        return StandardResponse.createResponse(tagResponseDTO,
+        return StandardResponse.createResponse(tagService.create(tagRequestDTO),
                 tokenService.getJWTToken(tokenService.getUserNick()));
     }
 
@@ -55,9 +57,7 @@ public class TagController {
     public StandardResponse updateTag(@RequestBody @Valid TagRequestDTO tagRequestDTO,
                                       @PathVariable(value = "id") Integer id) throws Exception {
         roleOperativeActionService.checkRoleOperativeAndAction(OPERATIVE, Action.UPDATE.ordinal());
-        Tag tag = tagService.update(tagRequestDTO, id);
-        TagResponseDTO tagResponseDTO = modelMapper.map(tag, TagResponseDTO.class);
-        return StandardResponse.createResponse(tagResponseDTO,
+        return StandardResponse.createResponse(tagService.update(tagRequestDTO, id),
                 tokenService.getJWTToken(tokenService.getUserNick()));
     }
 

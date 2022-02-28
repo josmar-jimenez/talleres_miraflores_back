@@ -13,6 +13,11 @@ import lombok.Setter;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class TagResponseDTO {
 
-    private int id;
+    private Integer id;
+    private Integer fatherId;
+    private Integer typeId;
     private String name;
+    private String typeName;
+    private String fatherName;
+    private String fatherTypeName;
 }
