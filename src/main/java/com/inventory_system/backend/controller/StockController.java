@@ -96,4 +96,5 @@ public class StockController {
         return StandardResponse.createResponse(response,
                 tokenService.getJWTToken(tokenService.getUserNick()));
     }*/
+
 }
