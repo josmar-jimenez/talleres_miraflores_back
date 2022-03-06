@@ -2,7 +2,6 @@ package com.inventory_system.backend.config;
 
 import com.inventory_system.backend.dto.response.product.ProductResponseDTO;
 import com.inventory_system.backend.model.Product;
-import com.inventory_system.backend.model.Stock;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpHost;
@@ -57,18 +56,18 @@ public class ElasticSearchConnection {
     /*Create client rest elasticsearh*/
     public void createClient() {
         try {
-            //restClient = new RestHighLevelClient(RestClient.builder(new HttpHost(IP, Integer.parseInt(PORT), PROTOCOL)));
+            restClient = new RestHighLevelClient(RestClient.builder(new HttpHost(IP, Integer.parseInt(PORT), PROTOCOL)));
 
-            URI connUri = URI.create("https://p538yrnnd6:g7lguaua7u@apple-473953082.us-east-1.bonsaisearch.net:443");
-            String[] auth = connUri.getUserInfo().split(":");
-            CredentialsProvider cp = new BasicCredentialsProvider();
-            cp.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(auth[0], auth[1]));
+            //URI connUri = URI.create("https://p538yrnnd6:g7lguaua7u@apple-473953082.us-east-1.bonsaisearch.net:443");
+//            String[] auth = connUri.getUserInfo().split(":");
+//            CredentialsProvider cp = new BasicCredentialsProvider();
+//            cp.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(auth[0], auth[1]));
 
-            restClient = new RestHighLevelClient(
+/*            restClient = new RestHighLevelClient(
                     RestClient.builder(new HttpHost(connUri.getHost(), connUri.getPort(), connUri.getScheme()))
                             .setHttpClientConfigCallback(
                                     httpAsyncClientBuilder -> httpAsyncClientBuilder.setDefaultCredentialsProvider(cp)
-                                            .setKeepAliveStrategy(new DefaultConnectionKeepAliveStrategy())));
+                                            .setKeepAliveStrategy(new DefaultConnectionKeepAliveStrategy())));*/
 
             log.debug("Elastic-> Cliente elastic " + restClient);
         } catch (Exception e) {
