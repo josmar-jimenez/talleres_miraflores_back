@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 public class DataSourceConfig {
     @Bean
     @Primary
-    @ConfigurationProperties("spring.datasource")
+    @ConfigurationProperties("spring.datasource.ovh")
     public DataSourceProperties dataSourceProperties() {
         return new DataSourceProperties();
     }
