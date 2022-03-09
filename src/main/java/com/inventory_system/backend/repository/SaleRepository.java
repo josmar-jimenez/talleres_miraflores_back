@@ -10,7 +10,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.time.OffsetDateTime;
-import java.util.List;
 
 @Repository
 public interface SaleRepository extends JpaRepository<Sale, Integer> {
@@ -19,11 +18,11 @@ public interface SaleRepository extends JpaRepository<Sale, Integer> {
 
     Page<Sale> findByStore(Store store, Pageable pageable);
 
-    List<Sale>findByCreatedGreaterThan(OffsetDateTime created);
+    long countByCreatedGreaterThan(OffsetDateTime created);
 
-    List<Sale>findByStoreAndCreatedGreaterThan(Store store, OffsetDateTime created);
+    long countByStoreAndCreatedGreaterThan(Store store, OffsetDateTime created);
 
-    List<Sale>findByUserAndCreatedGreaterThan(User user, OffsetDateTime created);
+    long countByUserAndCreatedGreaterThan(User user, OffsetDateTime created);
 
     @Query("SELECT s FROM Sale s WHERE " +
             "LOWER(s.user.name) LIKE %?1% OR " +

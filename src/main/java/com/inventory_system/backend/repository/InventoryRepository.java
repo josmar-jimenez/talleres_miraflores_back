@@ -10,7 +10,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.time.OffsetDateTime;
-import java.util.List;
 
 @Repository
 public interface InventoryRepository extends JpaRepository<Inventory, Integer> {
@@ -19,11 +18,11 @@ public interface InventoryRepository extends JpaRepository<Inventory, Integer> {
 
     Page<Inventory> findByStore(Store store, Pageable pageable);
 
-    List<Inventory> findByHasMismatchAndCreatedGreaterThan(boolean hasMismatch, OffsetDateTime created);
+    long countByHasMismatchAndCreatedGreaterThan(boolean hasMismatch, OffsetDateTime created);
 
-    List<Inventory>findByHasMismatchAndStoreAndCreatedGreaterThan(boolean hasMismatch,Store store, OffsetDateTime created);
+    long countByHasMismatchAndStoreAndCreatedGreaterThan(boolean hasMismatch,Store store, OffsetDateTime created);
 
-    List<Inventory>findByHasMismatchAndUserAndCreatedGreaterThan(boolean hasMismatch,User user, OffsetDateTime created);
+    long countByHasMismatchAndUserAndCreatedGreaterThan(boolean hasMismatch,User user, OffsetDateTime created);
 
     @Query("SELECT i FROM Inventory i WHERE " +
             "LOWER(i.store.name) LIKE %?1%")

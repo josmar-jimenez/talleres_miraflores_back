@@ -98,13 +98,13 @@ public class StockService {
         }
     }
 
-    public List<Stock> findProductLowStock() throws UnauthorizedException {
+    public long findProductLowStock() throws UnauthorizedException {
 
         User userLogged = userService.findByNick(tokenService.getUserNick());
         if (userLogged.getRole().getId() == 1) {
-            return stockRepository.findByStockLessThan(10l);
+            return stockRepository.countByStockLessThan(10l);
         } else {
-            return stockRepository.findByStoreAndStockLessThan(userLogged.getStore(), 10l);
+            return stockRepository.countByStoreAndStockLessThan(userLogged.getStore(), 10l);
         }
     }
 

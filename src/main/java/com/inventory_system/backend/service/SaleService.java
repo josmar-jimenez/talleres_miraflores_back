@@ -67,7 +67,7 @@ public class SaleService {
         }
     }
 
-    public List<Sale> findAllFromLastType(SummaryTimeType type) throws UnauthorizedException {
+    public long findAllFromLastType(SummaryTimeType type) throws UnauthorizedException {
 
         User userLogged = userService.findByNick(tokenService.getUserNick());
         OffsetDateTime fromDate = OffsetDateTime.now();
@@ -79,11 +79,11 @@ public class SaleService {
             fromDate = fromDate.minusDays(fromDate.getDayOfMonth()-1).truncatedTo(ChronoUnit.DAYS);
         }
         if (userLogged.getRole().getId()==1) {
-            return saleRepository.findByCreatedGreaterThan(fromDate);
+            return saleRepository.countByCreatedGreaterThan(fromDate);
         } else if(userLogged.getRole().getId()==2) {
-            return saleRepository.findByStoreAndCreatedGreaterThan(userLogged.getStore(),fromDate);
+            return saleRepository.countByStoreAndCreatedGreaterThan(userLogged.getStore(),fromDate);
         } else{
-            return saleRepository.findByUserAndCreatedGreaterThan(userLogged,fromDate);
+            return saleRepository.countByUserAndCreatedGreaterThan(userLogged,fromDate);
         }
     }
 
