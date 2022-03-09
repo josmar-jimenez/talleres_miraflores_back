@@ -15,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/tag")
@@ -67,6 +68,13 @@ public class TagController {
         Page<TagResponseDTO> page = tagService.findAll(pageable).map(tag ->
                 modelMapper.map(tag, TagResponseDTO.class));
         return StandardResponse.createResponse(page,
+                tokenService.getJWTToken(tokenService.getUserNick()));
+    }
+
+    @GetMapping("/types")
+    public StandardResponse getTagType() throws Exception {
+        roleOperativeActionService.checkRoleOperativeAndAction(OPERATIVE, Action.QUERY.ordinal());
+        return StandardResponse.createResponse(tagService.findAllTagType(),
                 tokenService.getJWTToken(tokenService.getUserNick()));
     }
 

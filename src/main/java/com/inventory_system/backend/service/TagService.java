@@ -4,6 +4,7 @@ import com.inventory_system.backend.dto.request.stock.StockFilterRequestDTO;
 import com.inventory_system.backend.dto.request.tag.TagFilterRequestDTO;
 import com.inventory_system.backend.dto.request.tag.TagRequestDTO;
 import com.inventory_system.backend.dto.response.tag.TagResponseDTO;
+import com.inventory_system.backend.dto.response.tag.TagTypeResponseDTO;
 import com.inventory_system.backend.exception.BusinessException;
 import com.inventory_system.backend.exception.UnauthorizedException;
 import com.inventory_system.backend.model.Stock;
@@ -18,8 +19,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import static com.inventory_system.backend.util.InventorySystemConstant.*;
@@ -56,6 +60,16 @@ public class TagService {
             pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sortDefault);
         }
         return tagRepository.findAll(pageable).map(this::mapTagToTagResponseDto);
+    }
+
+    public List<TagTypeResponseDTO> findAllTagType() {
+        List<TagType> tagTypeList = tagTypeRepository.findAll();
+        if(CollectionUtils.isEmpty(tagTypeList))
+            return new ArrayList<>();
+        List<TagTypeResponseDTO> tagTypeResponseDTOList = new ArrayList<>();
+        tagTypeList.forEach(tagType ->
+                tagTypeResponseDTOList.add(new TagTypeResponseDTO(tagType.getId(),tagType.getName())));
+        return tagTypeResponseDTOList;
     }
 
     public Page<TagResponseDTO> findAllFiltered(Pageable pageable, TagFilterRequestDTO tagFilterRequestDTO) {
