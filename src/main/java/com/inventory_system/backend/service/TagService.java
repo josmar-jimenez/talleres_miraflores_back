@@ -114,7 +114,7 @@ public class TagService {
         if(!tag.getName().equals(tagRequestDTO.getName())||
                 (tag.getType()!=null&&tag.getType().getId()!=tagRequestDTO.getTypeId())) {
             Tag tagExist = findByNameAndTypeId(tagRequestDTO.getName(),tagRequestDTO.getTypeId());
-            if (!Objects.isNull(tagExist) && tag.getId() != id) {
+            if (!Objects.isNull(tagExist) && tag.getId() != tagExist.getId()) {
                 throw new BusinessException(RECORD_EXIST_CODE, RECORD_EXIST + "name, typeId");
             }
         }
