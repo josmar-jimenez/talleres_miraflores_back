@@ -1,5 +1,6 @@
 package com.inventory_system.backend.repository;
 
+import com.inventory_system.backend.model.Status;
 import com.inventory_system.backend.model.Stock;
 import com.inventory_system.backend.model.Store;
 import org.springframework.data.domain.Page;
@@ -22,9 +23,9 @@ public interface StockRepository extends JpaRepository<Stock, Integer> {
     @Query("SELECT s FROM Stock s WHERE s.product.id=?1 AND s.product.status.id=1 and s.store.status.id=1 and s.status.id=1")
     List<Stock> findByProductId(int productId);
 
-    long  countByStockLessThan(Long minimumStock);
+    long  countByStatusAndStockLessThan(Status status, Long minimumStock);
 
-    long  countByStoreAndStockLessThan(Store store, Long minimumStock);
+    long  countByStoreAndStatusAndStockLessThan(Store store, Status status,Long minimumStock);
 
     @Query("SELECT s FROM Stock s WHERE " +
             "LOWER(s.product.name) LIKE %?1% OR " +
