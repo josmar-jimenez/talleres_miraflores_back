@@ -25,13 +25,13 @@ public class CustomExceptionHandler {
 
     @ExceptionHandler(ForbiddenException.class)
     public final ResponseEntity<Object> handleForbidden(
-            UnauthorizedException ex) {
+            ForbiddenException ex) {
         return new ResponseEntity<>("Forbidden", new HttpHeaders(), HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler(InternalException.class)
     public final ResponseEntity<Object> handleInternal(
-            UnauthorizedException ex) {
+            InternalException ex) {
         return new ResponseEntity<>("Internal Sever Error", new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 

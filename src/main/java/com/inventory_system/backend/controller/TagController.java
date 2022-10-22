@@ -44,9 +44,10 @@ public class TagController {
 
     @PostMapping("/filtered")
     public StandardResponse getTagsFiltered(Pageable pageable, @RequestBody TagFilterRequestDTO tagFilterRequestDTO) throws Exception {
-        roleOperativeActionService.checkRoleOperativeAndAction(OPERATIVE, Action.QUERY.ordinal());
+        throw new InternalException();
+       /* roleOperativeActionService.checkRoleOperativeAndAction(OPERATIVE, Action.QUERY.ordinal());
         return StandardResponse.createResponse(tagService.findAllFiltered(pageable,tagFilterRequestDTO),
-                tokenService.getJWTToken(tokenService.getUserNick()));
+                tokenService.getJWTToken(tokenService.getUserNick()));*/
     }
 
     @PostMapping
@@ -66,12 +67,11 @@ public class TagController {
 
     @GetMapping
     public StandardResponse getTags(Pageable pageable) throws Exception {
-        throw new InternalException();
-        /*roleOperativeActionService.checkRoleOperativeAndAction(OPERATIVE, Action.QUERY.ordinal());
+        roleOperativeActionService.checkRoleOperativeAndAction(OPERATIVE, Action.QUERY.ordinal());
         Page<TagResponseDTO> page = tagService.findAll(pageable).map(tag ->
                 modelMapper.map(tag, TagResponseDTO.class));
         return StandardResponse.createResponse(page,
-                tokenService.getJWTToken(tokenService.getUserNick()));*/
+                tokenService.getJWTToken(tokenService.getUserNick()));
     }
 
     @DeleteMapping("/{id}")
