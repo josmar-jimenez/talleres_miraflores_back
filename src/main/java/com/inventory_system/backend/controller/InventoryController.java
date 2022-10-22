@@ -57,22 +57,22 @@ public class InventoryController {
 
     @GetMapping
     public StandardResponse getInventories(Pageable pageable) throws Exception {
-        throw new ForbiddenException();
-        /*Allowed allowed = roleOperativeActionService.checkRoleOperativeAndAction(OPERATIVE, Action.QUERY.ordinal());
+        Allowed allowed = roleOperativeActionService.checkRoleOperativeAndAction(OPERATIVE, Action.QUERY.ordinal());
         Page<InventoryResponseDTO> page = inventoryService.findAll(pageable, allowed).map(inventory ->
                 modelMapper.map(inventory, InventoryResponseDTO.class));
         return StandardResponse.createResponse(page,
-                tokenService.getJWTToken(tokenService.getUserNick()));*/
+                tokenService.getJWTToken(tokenService.getUserNick()));
     }
 
     @PostMapping("/filtered")
     public StandardResponse getInventoriesFiltered(Pageable pageable, @RequestBody InventoryFilterRequestDTO inventoryFilterRequestDTO) throws Exception {
-        roleOperativeActionService.checkRoleOperativeAndAction(OPERATIVE, Action.QUERY.ordinal());
+        throw new ForbiddenException();
+/*        roleOperativeActionService.checkRoleOperativeAndAction(OPERATIVE, Action.QUERY.ordinal());
         Allowed allowed = roleOperativeActionService.checkRoleOperativeAndAction(OPERATIVE, Action.QUERY.ordinal());
         Page<InventoryResponseDTO> page = inventoryService.findAllFiltered(pageable,inventoryFilterRequestDTO,allowed).map(inventory ->
                 modelMapper.map(inventory, InventoryResponseDTO.class));
         return StandardResponse.createResponse(page,
-                tokenService.getJWTToken(tokenService.getUserNick()));
+                tokenService.getJWTToken(tokenService.getUserNick()));*/
     }
 
 }

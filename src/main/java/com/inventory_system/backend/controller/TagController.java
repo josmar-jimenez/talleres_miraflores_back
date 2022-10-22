@@ -66,19 +66,19 @@ public class TagController {
 
     @GetMapping
     public StandardResponse getTags(Pageable pageable) throws Exception {
-        throw new InternalException();
-        /*roleOperativeActionService.checkRoleOperativeAndAction(OPERATIVE, Action.QUERY.ordinal());
+        roleOperativeActionService.checkRoleOperativeAndAction(OPERATIVE, Action.QUERY.ordinal());
         Page<TagResponseDTO> page = tagService.findAll(pageable).map(tag ->
                 modelMapper.map(tag, TagResponseDTO.class));
         return StandardResponse.createResponse(page,
-                tokenService.getJWTToken(tokenService.getUserNick()));*/
+                tokenService.getJWTToken(tokenService.getUserNick()));
     }
 
     @DeleteMapping("/{id}")
     public StandardResponse deleteTag(@PathVariable(value = "id") Integer id) throws Exception {
-        roleOperativeActionService.checkRoleOperativeAndAction(OPERATIVE, Action.UPDATE.ordinal());
+        throw new InternalException();
+/*        roleOperativeActionService.checkRoleOperativeAndAction(OPERATIVE, Action.UPDATE.ordinal());
         boolean response = tagService.delete(id);
         return StandardResponse.createResponse(response,
-                tokenService.getJWTToken(tokenService.getUserNick()));
+                tokenService.getJWTToken(tokenService.getUserNick()));*/
     }
 }
