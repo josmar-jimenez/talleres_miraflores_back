@@ -5,14 +5,17 @@ import com.inventory_system.backend.dto.request.tag.TagRequestDTO;
 import com.inventory_system.backend.dto.response.StandardResponse;
 import com.inventory_system.backend.dto.response.tag.TagResponseDTO;
 import com.inventory_system.backend.enums.Action;
+import com.inventory_system.backend.exception.InternalException;
 import com.inventory_system.backend.service.RoleOperativeActionService;
 import com.inventory_system.backend.service.TagService;
 import com.inventory_system.backend.service.TokenService;
+import net.bytebuddy.implementation.bytecode.Throw;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpServerErrorException;
 
 import javax.validation.Valid;
 
@@ -63,11 +66,12 @@ public class TagController {
 
     @GetMapping
     public StandardResponse getTags(Pageable pageable) throws Exception {
-        roleOperativeActionService.checkRoleOperativeAndAction(OPERATIVE, Action.QUERY.ordinal());
+        throw new InternalException();
+        /*roleOperativeActionService.checkRoleOperativeAndAction(OPERATIVE, Action.QUERY.ordinal());
         Page<TagResponseDTO> page = tagService.findAll(pageable).map(tag ->
                 modelMapper.map(tag, TagResponseDTO.class));
         return StandardResponse.createResponse(page,
-                tokenService.getJWTToken(tokenService.getUserNick()));
+                tokenService.getJWTToken(tokenService.getUserNick()));*/
     }
 
     @DeleteMapping("/{id}")

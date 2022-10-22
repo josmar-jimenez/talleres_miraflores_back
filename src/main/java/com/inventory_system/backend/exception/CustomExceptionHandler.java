@@ -20,7 +20,19 @@ public class CustomExceptionHandler {
     @ExceptionHandler(UnauthorizedException.class)
     public final ResponseEntity<Object> handleUnauthorized(
             UnauthorizedException ex) {
-        return new ResponseEntity<>("UNAUTHORIZED", new HttpHeaders(), HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>("Unauthorized", new HttpHeaders(), HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(ForbiddenException.class)
+    public final ResponseEntity<Object> handleForbidden(
+            UnauthorizedException ex) {
+        return new ResponseEntity<>("Forbidden", new HttpHeaders(), HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(InternalException.class)
+    public final ResponseEntity<Object> handleInternal(
+            UnauthorizedException ex) {
+        return new ResponseEntity<>("Internal Sever Error", new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler(BusinessException.class)

@@ -6,6 +6,7 @@ import com.inventory_system.backend.dto.response.StandardResponse;
 import com.inventory_system.backend.dto.response.inventory.InventoryResponseDTO;
 import com.inventory_system.backend.enums.Action;
 import com.inventory_system.backend.enums.Allowed;
+import com.inventory_system.backend.exception.ForbiddenException;
 import com.inventory_system.backend.model.Inventory;
 import com.inventory_system.backend.service.InventoryService;
 import com.inventory_system.backend.service.RoleOperativeActionService;
@@ -56,11 +57,12 @@ public class InventoryController {
 
     @GetMapping
     public StandardResponse getInventories(Pageable pageable) throws Exception {
-        Allowed allowed = roleOperativeActionService.checkRoleOperativeAndAction(OPERATIVE, Action.QUERY.ordinal());
+        throw new ForbiddenException();
+        /*Allowed allowed = roleOperativeActionService.checkRoleOperativeAndAction(OPERATIVE, Action.QUERY.ordinal());
         Page<InventoryResponseDTO> page = inventoryService.findAll(pageable, allowed).map(inventory ->
                 modelMapper.map(inventory, InventoryResponseDTO.class));
         return StandardResponse.createResponse(page,
-                tokenService.getJWTToken(tokenService.getUserNick()));
+                tokenService.getJWTToken(tokenService.getUserNick()));*/
     }
 
     @PostMapping("/filtered")
