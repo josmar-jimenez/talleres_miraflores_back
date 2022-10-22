@@ -26,7 +26,7 @@ public class CustomExceptionHandler {
     @ExceptionHandler(ForbiddenException.class)
     public final ResponseEntity<Object> handleForbidden(
             UnauthorizedException ex) {
-        return new ResponseEntity<>("Forbidden", new HttpHeaders(), HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>("Forbidden", new HttpHeaders(), HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler(InternalException.class)
